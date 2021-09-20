@@ -1,0 +1,27 @@
+{
+  "name": "FuzzyFurs",
+  "version": "0.1.0",
+  "description": "A Discord Bot for the Fuzzy Furs Discord Server!",
+  "main": "dist/index.js",
+  "repository": "git@github.com:Fuzzy-Furs/Bot.git",
+  "author": "Jason Diaz Jimenez <vulpothedev@gmail.com> (https://vulpo.xyz)",
+  "license": "GNU GPLv3",
+  "private": true,
+  "dependencies": {
+    "@discordjs/rest": "^0.1.0-canary.0",
+    "discord-api-types": "^0.23.1",
+    "discord.js": "^13.1.0",
+    "dotenv": "^10.0.0",
+    "mongoose": "^6.0.7",
+    "typescript": "^4.4.3"
+  },
+  "scripts": {
+    "start": "node dist/index",
+    "dev": "yarn clean; yarn compile; NODE_ENV=development yarn start",
+    "prod": "yarn clean; yarn compile; NODE_ENV=production yarn start",
+    "dev:win": "yarn clean:win && yarn compile && yarn start",
+    "clean": "rm -rf dist",
+    "clean:win": "del /Q /S dist",
+    "compile": "tsc"
+  }
+}
