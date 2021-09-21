@@ -9,9 +9,9 @@ export default abstract class BaseSlashCommand {
 	public extendedDescription?: string;
 	public group?: string;
 	public name?: string;
+	public description: string
 	public ownerOnly?: boolean;
 	public runIn?: 'both' | 'dms' | 'servers';
-	public shortDescription: string;
 	public usage?: string;
 	constructor(client: FuzzyClient, options: ICommandOptions) {
 		this.client = client;
@@ -22,8 +22,8 @@ export default abstract class BaseSlashCommand {
         this.name = options.name 
         this.ownerOnly = options.ownerOnly 
         this.runIn = options.runIn 
-        this.shortDescription = options.shortDescription 
         this.usage = options.usage 
+		this.description = options.shortDescription
 	}
     abstract run(interaction: Interaction): void;
 }

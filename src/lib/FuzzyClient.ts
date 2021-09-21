@@ -7,13 +7,14 @@ export default class FuzzyClient extends Client {
 	commands: Collection<string, BaseCommand>;
 	aliases: Collection<string, string>;
 	slashCommands: Collection<string, BaseSlashCommand>;
-    arrayOfSlashCommands: ApplicationCommand[]
+	arrayOfSlashCommands: ApplicationCommand[];
 	config: { [index: string]: {} };
 	constructor(opts: ClientOptions) {
 		super(opts);
 		this.commands = new Collection();
 		this.aliases = new Collection();
 		this.slashCommands = new Collection();
+		this.arrayOfSlashCommands = []
 	}
 
 	public async loadCommands() {
@@ -49,30 +50,29 @@ export default class FuzzyClient extends Client {
 		});
 	}
 
-    public async loadSlashCommands(){
-        console.log(`Loading Slash Commands`);
+	public async loadSlashCommands() {
+		console.log(`Loading Slash Commands`);
 		fs.readdirSync("dist/slashCommands/").forEach((category) => {
 			console.log(`Loading (/) Category: ${category}`);
 			fs.readdirSync(`dist/slashCommands/${category}`).map((command) => {
-                const file: BaseSlashCommand = new (require(`../slashCommands/${category}/${command}`).default)(this)
-                if(!file || !file.name) return
-                this.slashCommands.set(file.name, file)
-                // @ts-expect-error
-                this.arrayOfSlashCommands.push(file)
-                console.log(file)
-                const commandOptions: ApplicationCommandOptionData[] = [];
-
-					command.args?.forEach((arg) => {
-						commandOptions.push({
-							name: arg.name,
-							description: arg.description,
-							type: arg.type,
-							choices: arg.choices,
-							required: arg.required,
-							// @ts-ignore
-							options: arg.options,
-						});
+				const file: BaseSlashCommand = new (require(`../slashCommands/${category}/${command}`).default)(this);
+				if (!file || !file.name) return;
+				this.slashCommands.set(file.name, file);
+				// @ts-expect-error
+				this.arrayOfSlashCommands.push(file);
+				const commandOptions: ApplicationCommandOptionData[] = [];
+				file.args?.forEach((arg) => {
+					commandOptions.push({
+						name: arg.name,
+						description: arg.description,
+						type: arg.type,
+						choices: arg.choices,
+						required: arg.required,
+						// @ts-ignore
+						options: arg.options,
+					});
+				});
 			});
 		});
-    }
+	}
 }

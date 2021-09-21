@@ -10,7 +10,6 @@ export default class ReadyEvent extends BaseEvent {
 	}
 	async run(client: FuzzyClient, interaction: Interaction) {
         if(interaction.isCommand()){
-            await interaction.deferReply().catch(() => {});
             const cmd = client.slashCommands.get(interaction.commandName)
             if(!cmd) return;
             cmd.run(interaction)
