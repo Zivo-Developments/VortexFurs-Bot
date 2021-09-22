@@ -25,7 +25,6 @@ export default class FuzzyClient extends Client {
 				if (!file || !file.name) return;
 				this.commands.set(file.name, file);
 				if(file.userPermissions.length > 0 || file.ownerOnly) file.defaultPermission = false 
-				this.arrayOfSlashCommands.push(file);
 				const commandOptions: ApplicationCommandOptionData[] = [];
 				file.args?.forEach((arg) => {
 					commandOptions.push({
@@ -37,6 +36,11 @@ export default class FuzzyClient extends Client {
 						// @ts-ignore
 						options: arg.options,
 					});
+				});
+				this.arrayOfSlashCommands.push({
+					...file,
+					options: commandOptions,
+					run: file.run
 				});
 			});
 		});

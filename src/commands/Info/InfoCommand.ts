@@ -9,7 +9,7 @@ export default class PingCommand extends BaseSlashCommand {
             shortDescription: "Get the bot's information",
             args: [],
             cooldown: 0,
-            userPermissions: ["MANAGE_CHANNELS"],
+            userPermissions: [],
             botPermissions: [],
         })
     }

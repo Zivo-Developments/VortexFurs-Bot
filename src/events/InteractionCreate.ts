@@ -1,4 +1,4 @@
-import { Interaction } from "discord.js";
+import { Interaction, MessageEmbed } from "discord.js";
 import FuzzyClient from "../lib/FuzzyClient";
 import BaseEvent from "../structures/BaseEvent";
 
@@ -56,8 +56,16 @@ export default class ReadyEvent extends BaseEvent {
 						ephemeral: true,
 					});
 			}
-
-			cmd.run(interaction);
+			try{
+				await cmd.run(interaction);
+			}catch(e){
+				const embed = new MessageEmbed()
+				.setAuthor(interaction.user.tag, interaction.user.displayAvatarURL({ dynamic: true }))
+				.setColor("RED")
+				.setDescription(`${e}`)
+				.setFooter(`If this isn't a fixable problem on your side please dm ${client.users.cache.get(client.config.ownerID)!.tag}`)
+				interaction.reply({ embeds: [embed] })
+			}
 		}
 	}
 }
