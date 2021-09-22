@@ -3,7 +3,7 @@ import { CommandInteraction, MessageEmbed } from "discord.js";
 import FuzzyClient from "../../lib/FuzzyClient";
 import BaseSlashCommand from "../../structures/BaseCommand";
 
-export default class PingCommand extends BaseSlashCommand {
+export default class EvalCommand extends BaseSlashCommand {
 	constructor(client: FuzzyClient) {
 		super(client, {
 			name: "eval",
@@ -36,13 +36,13 @@ export default class PingCommand extends BaseSlashCommand {
 			const promisedEval: any = await Promise.resolve(evaluated);
 			let res;
 			if (evaled.toString().length >= 1024) {
-				res = "Result too big, check the console"
+				res = "Result too big, check the console";
 			} else {
 				res = evaled;
 			}
 			let promisedResult;
 			if (promisedEval.toString().length >= 1024) {
-				promisedResult = "Result too big, check the console"
+				promisedResult = "Result too big, check the console";
 			} else {
 				promisedResult = promisedEval;
 			}
@@ -69,7 +69,7 @@ export default class PingCommand extends BaseSlashCommand {
 			await interaction.reply({ embeds: [embed], ephemeral: true });
 		} catch (err: any) {
 			// If any errors occurred... then, send the error instead
-			throw new Error(err)
+			throw new Error(err);
 		}
 	}
 }
