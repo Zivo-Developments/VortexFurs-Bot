@@ -11,6 +11,5 @@ const client = new FuzzyClient({
 
 client.loadCommands()
 client.loadEvents()
-client.loadSlashCommands()
 
 client.login(process.env.TOKEN as string)

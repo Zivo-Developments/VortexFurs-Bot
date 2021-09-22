@@ -1,64 +1,30 @@
-import { ApplicationCommand, ApplicationCommandOptionData, Client, ClientOptions, Collection } from "discord.js";
-import BaseCommand from "../structures/BaseCommand";
+import { ApplicationCommand, ApplicationCommandData, ApplicationCommandOptionData, ChatInputApplicationCommandData, Client, ClientOptions, Collection, ColorResolvable } from "discord.js";
 import fs from "fs";
-import BaseSlashCommand from "../structures/BaseSlashCommand";
+import { NamespaceExport } from "typescript";
+import BaseCommand from "../structures/BaseCommand";
 
 export default class FuzzyClient extends Client {
 	commands: Collection<string, BaseCommand>;
 	aliases: Collection<string, string>;
-	slashCommands: Collection<string, BaseSlashCommand>;
-	arrayOfSlashCommands: ApplicationCommand[];
-	config: { [index: string]: {} };
+	arrayOfSlashCommands: (ChatInputApplicationCommandData & BaseCommand)[];
+	config: { color: ColorResolvable, guildID: string, ownerID: string };
 	constructor(opts: ClientOptions) {
 		super(opts);
+		this.config = require('../../config.json')
 		this.commands = new Collection();
 		this.aliases = new Collection();
-		this.slashCommands = new Collection();
 		this.arrayOfSlashCommands = []
 	}
 
 	public async loadCommands() {
-		console.log(`Loading Commands`);
-		fs.readdirSync("dist/commands/").forEach((category) => {
-			console.log(`Loading Category: ${category}`);
-			fs.readdirSync(`dist/commands/${category}`).forEach((command) => {
-				try {
-					console.log(`Loading ${command}`);
-					const cmd: BaseCommand = new (require(`../commands/${category}/${command}`).default)(this);
-					this.commands.set(cmd.name, cmd);
-					cmd.aliases.forEach((alias: string) => {
-						this.aliases.set(alias, cmd.name);
-					});
-					console.log(`Loaded ${cmd.name}`);
-				} catch (e) {
-					console.error(`Unable to load ${command.split(".")[0]} ${e}`);
-				}
-			});
-		});
-		console.log(`Loaded All Commands`);
-	}
-
-	public async loadEvents() {
-		console.log(`Loading Events`);
-		fs.readdirSync("dist/events/").forEach((evt) => {
-			try {
-				const event = new (require(`../events/${evt}`).default)(this);
-				this.on(event.eventName, event.run.bind(null, this));
-			} catch (e) {
-				console.error(`Error Loading ${evt.split(".")[0]} ${e}`);
-			}
-		});
-	}
-
-	public async loadSlashCommands() {
 		console.log(`Loading Slash Commands`);
-		fs.readdirSync("dist/slashCommands/").forEach((category) => {
+		fs.readdirSync("dist/commands/").forEach((category) => {
 			console.log(`Loading (/) Category: ${category}`);
-			fs.readdirSync(`dist/slashCommands/${category}`).map((command) => {
-				const file: BaseSlashCommand = new (require(`../slashCommands/${category}/${command}`).default)(this);
+			fs.readdirSync(`dist/commands/${category}`).forEach((command) => {
+				const file: BaseCommand = new (require(`../commands/${category}/${command}`).default)(this);
 				if (!file || !file.name) return;
-				this.slashCommands.set(file.name, file);
-				// @ts-expect-error
+				this.commands.set(file.name, file);
+				if(file.userPermissions.length > 0 || file.ownerOnly) file.defaultPermission = false 
 				this.arrayOfSlashCommands.push(file);
 				const commandOptions: ApplicationCommandOptionData[] = [];
 				file.args?.forEach((arg) => {
@@ -75,4 +41,18 @@ export default class FuzzyClient extends Client {
 			});
 		});
 	}
+
+	public async loadEvents() {
+		console.log(`Loading Events`);
+		fs.readdirSync("dist/events/").forEach((evt) => {
+			try {
+				const event = new (require(`../events/${evt}`).default)(this);
+				this.on(event.eventName, event.run.bind(null, this));
+			} catch (e) {
+				console.error(`Error Loading ${evt.split(".")[0]} ${e}`);
+			}
+		});
+	}
+
+
 }

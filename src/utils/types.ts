@@ -1,13 +1,24 @@
-import { PermissionFlags, PermissionResolvable, Permissions } from "discord.js";
-import FuzzyClient from "../lib/FuzzyClient";
+import { ApplicationCommandPermissions, CommandOptionChoiceResolvableType, CommandOptionDataTypeResolvable, PermissionFlags } from "discord.js";
 
-export type CommandsOptions = {
-    client: FuzzyClient
-    name: string
-    description: string
-    aliases: string[]
-    examples: string[]
+export interface ICommandOptions {
+	args?: ICommandArgsOptions[];
+	cooldown?: number;
+	extendedDescription?: string;
+	group?: string;
+	name: string;
+	ownerOnly?: boolean;
+	runIn?: 'both' | 'dms' | 'servers';
+	shortDescription: string;
+	usage?: string;
     userPermissions: Array<keyof PermissionFlags>
     botPermissions: Array<keyof PermissionFlags>
-    category: string
+}
+
+export interface ICommandArgsOptions {
+	choices?: CommandOptionChoiceResolvableType[];
+	description: string;
+	name: string;
+	options?: ICommandArgsOptions[];
+	required?: boolean;
+	type: CommandOptionDataTypeResolvable;
 }

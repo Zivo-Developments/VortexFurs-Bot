@@ -1,24 +1,38 @@
-import { Message, PermissionResolvable } from "discord.js";
+import { ApplicationCommandPermissions, ApplicationCommandPermissionsManager, Interaction, PermissionFlags } from "discord.js";
 import FuzzyClient from "../lib/FuzzyClient";
-import type { CommandsOptions } from "../utils/types";
+import type { ICommandArgsOptions, ICommandOptions } from "../utils/types";
 
 export default abstract class BaseCommand {
-	public client: FuzzyClient;
+    public client?: FuzzyClient
+	public args?: ICommandArgsOptions[];
+	public cooldown?: number;
+	public extendedDescription?: string;
+	public group?: string;
 	public name: string;
-	public description: string;
-	public aliases: string[];
-	public examples: string[];
-	public userPermissions: Array<PermissionResolvable>;
-	public botPermissions: Array<PermissionResolvable>;
-	public category: string;
-	constructor(client: FuzzyClient, options: CommandsOptions) {
+	public description: string
+	public ownerOnly?: boolean;
+	public runIn?: 'both' | 'dms' | 'servers';
+	public usage?: string;
+	public userPermissions: Array<keyof PermissionFlags>
+	public botPermissions:  Array<keyof PermissionFlags>
+	public permissions?: ApplicationCommandPermissions[]
+	public defaultPermission: boolean
+	constructor(client: FuzzyClient, options: ICommandOptions) {
 		this.client = client;
-		this.name = options.name;
-		this.category = options.category;
-		this.aliases = options.aliases || [];
-		this.botPermissions = options.botPermissions || [];
-		this.description = options.description;
-		this.examples = options.examples;
+        this.args = options.args 
+        this.cooldown = options.cooldown 
+        this.extendedDescription = options.extendedDescription 
+        this.group = options.group 
+        this.name = options.name 
+        this.ownerOnly = options.ownerOnly || false
+        this.runIn = options.runIn 
+        this.usage = options.usage 
+		this.description = options.shortDescription
+		this.userPermissions = options.userPermissions || []
+		this.botPermissions  = options.botPermissions || []
+		
 	}
-    abstract run(message: Message, args: string[]): void;
+    abstract run(interaction: Interaction): void;
 }
+
+
