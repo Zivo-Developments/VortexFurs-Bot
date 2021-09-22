@@ -65,7 +65,7 @@ export default class ExecCommand extends BaseSlashCommand {
 					)
 					.setTimestamp()
 					.setFooter(`User ID: ${interaction.user.id}`)
-					.setColor(this.client?.config.color!);
+					.setColor(this.client.config.color!);
 				// Sends the embed with the response embed in it... Get it?
 				await interaction.reply({ embeds: [embed] });
 			} catch (e) {

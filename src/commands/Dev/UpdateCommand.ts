@@ -21,7 +21,7 @@ export default class UpdateCommand extends BaseSlashCommand {
 		  const embed = new MessageEmbed()
 		  .setAuthor(`${interaction.user.tag}`, `${interaction.user.displayAvatarURL({ dynamic: true })}`)
 		  .setTitle('📥  Update - Updating bot...')
-		  .setColor(this.client?.config.color!)
+		  .setColor(this.client.config.color!)
 		  .setDescription('⏲️ This may take a bit...')
 		  .setTimestamp()
 		  .setFooter(`User ID: ${interaction.user.id}`);
@@ -40,7 +40,7 @@ export default class UpdateCommand extends BaseSlashCommand {
 
 		  const complete = new MessageEmbed()
 			  .setAuthor(`${interaction.user.tag}`, `${interaction.user.displayAvatarURL({ dynamic: true })}`)
-			  .setColor(this.client?.config.color!)
+			  .setColor(this.client.config.color!)
 			  .setTitle('Update - Bot was updated!')
 			  .addField(`📥 Git Pull`, `\`\`\`${gitPull}\`\`\``)
 			  .addField(`🧶 Yarn Install`, `\`\`\`${npmInstall}\`\`\``)
@@ -50,7 +50,7 @@ export default class UpdateCommand extends BaseSlashCommand {
 	  } catch (e) {
 		  const error = new MessageEmbed()
 			  .setAuthor(`${interaction.user.tag}`, `${interaction.user.displayAvatarURL({ dynamic: true })}`)
-			  .setColor(this.client?.config.color!)
+			  .setColor(this.client.config.color!)
 			  .setTitle("ERROR! - Bot didn't update!")
 			  .setDescription(
 				  `Please pray the lords and hope that the update didn't mess up the prod files.(Please ssh into the server and resolve the errors) \n \`\`\`${e}\`\`\``

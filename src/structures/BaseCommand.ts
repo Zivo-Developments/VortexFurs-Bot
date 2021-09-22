@@ -3,7 +3,7 @@ import FuzzyClient from "../lib/FuzzyClient";
 import type { ICommandArgsOptions, ICommandOptions } from "../utils/types";
 
 export default abstract class BaseCommand {
-    public client?: FuzzyClient
+    public client: FuzzyClient
 	public args?: ICommandArgsOptions[];
 	public cooldown?: number;
 	public extendedDescription?: string;

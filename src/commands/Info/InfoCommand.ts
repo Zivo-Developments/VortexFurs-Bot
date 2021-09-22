@@ -20,7 +20,7 @@ export default class PingCommand extends BaseSlashCommand {
         .addField("GitHub", "Repository is Private at the moment 🙂")
         .addField("Bugs/Feature Request", `Please DM ${interaction.client.users.cache.get("852070153804972043")}!`)
         .addField("Contributors", "None")
-        .setColor(this.client?.config.color!)
+        .setColor(this.client.config.color!)
         .setThumbnail(interaction.guild?.iconURL({ dynamic: true })!)
         .setFooter(`Bot made by ${interaction.client.users.cache.get("852070153804972043")!.tag}`)
         interaction.reply({ embeds: [embed] })

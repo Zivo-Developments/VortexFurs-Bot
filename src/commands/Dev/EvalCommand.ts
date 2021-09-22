@@ -51,7 +51,7 @@ export default class EvalCommand extends BaseSlashCommand {
 			const embed = new MessageEmbed()
 				.setAuthor(`${interaction.user.tag}`, `${interaction.user.displayAvatarURL({ dynamic: true })}`)
 				.setTitle("Evaluated Code")
-				.setColor(this.client?.config.color!)
+				.setColor(this.client.config.color!)
 				.setTimestamp()
 				.addField(":inbox_tray: Input: ", `\`\`\`ts\n${beautify(script, { format: "js" })} \`\`\``)
 				.addField(":outbox_tray: Output", `\`\`\`ts\n${res}\`\`\``)
