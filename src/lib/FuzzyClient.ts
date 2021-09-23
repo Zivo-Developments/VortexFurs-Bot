@@ -36,7 +36,7 @@ export default class FuzzyClient extends Client {
 			host: "localhost",
 			port: 5432,
 			username: "postgres",
-			password: "",
+			password: "Yadi2005",
 			database: "frenzy-furs",
 			entities: ["dist/entity/**/*.js"],
 			migrations: ["dist/migration/**/*.js"],
