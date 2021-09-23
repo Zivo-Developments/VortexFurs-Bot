@@ -2,10 +2,12 @@ import { ApplicationCommand, ApplicationCommandData, ApplicationCommandOptionDat
 import fs from "fs";
 import { NamespaceExport } from "typescript";
 import BaseCommand from "../structures/BaseCommand";
+import Yiffy from 'yiffy'
 
 export default class FuzzyClient extends Client {
 	commands: Collection<string, BaseCommand>;
 	aliases: Collection<string, string>;
+	furryAPI: Yiffy
 	arrayOfSlashCommands: (ChatInputApplicationCommandData & BaseCommand)[];
 	config: { color: ColorResolvable, guildID: string, ownerID: string };
 	constructor(opts: ClientOptions) {
@@ -13,6 +15,7 @@ export default class FuzzyClient extends Client {
 		this.config = require('../../config.json')
 		this.commands = new Collection();
 		this.aliases = new Collection();
+		this.furryAPI = new Yiffy()
 		this.arrayOfSlashCommands = []
 	}
 

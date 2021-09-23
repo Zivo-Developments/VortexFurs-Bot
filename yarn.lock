@@ -750,3 +750,8 @@ yallist@^2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/yallist/-/yallist-2.1.2.tgz#1c11f9218f076089a47dd512f93c6699a6a81d52"
   integrity sha1-HBH5IY8HYImkfdUS+TxmmaaoHVI=
+
+yiffy@^2.0.14:
+  version "2.0.14"
+  resolved "https://registry.yarnpkg.com/yiffy/-/yiffy-2.0.14.tgz#106e52bee9b8c934a0afb93019635d3d84eef1ee"
+  integrity sha512-IjB36aT9WKAEGUBO0e8AmvP9PNAF/97GeNhm0LkKpg7/8+NeO5zUdDSmrW52cf3KR56TH0+BZ6l4Met18D4EnQ==
