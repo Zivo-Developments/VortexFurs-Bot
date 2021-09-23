@@ -9,6 +9,7 @@ const client = new FuzzyClient({
     intents: ["GUILDS", "GUILD_MESSAGES"]
 })
 
+client.loadDatabase()
 client.loadCommands()
 client.loadEvents()
 

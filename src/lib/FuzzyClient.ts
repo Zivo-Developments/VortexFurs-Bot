@@ -1,22 +1,51 @@
-import { ApplicationCommand, ApplicationCommandData, ApplicationCommandOptionData, ChatInputApplicationCommandData, Client, ClientOptions, Collection, ColorResolvable } from "discord.js";
+import {
+	ApplicationCommand,
+	ApplicationCommandData,
+	ApplicationCommandOptionData,
+	ChatInputApplicationCommandData,
+	Client,
+	ClientOptions,
+	Collection,
+	ColorResolvable,
+} from "discord.js";
 import fs from "fs";
 import { NamespaceExport } from "typescript";
 import BaseCommand from "../structures/BaseCommand";
-import Yiffy from 'yiffy'
+import Yiffy from "yiffy";
+import { Connection, createConnection } from "typeorm";
 
 export default class FuzzyClient extends Client {
 	commands: Collection<string, BaseCommand>;
 	aliases: Collection<string, string>;
-	furryAPI: Yiffy
+	furryAPI: Yiffy;
 	arrayOfSlashCommands: (ChatInputApplicationCommandData & BaseCommand)[];
-	config: { color: ColorResolvable, guildID: string, ownerID: string };
+	config: { color: ColorResolvable; guildID: string; ownerID: string };
+	database: Connection;
 	constructor(opts: ClientOptions) {
 		super(opts);
-		this.config = require('../../config.json')
+		this.config = require("../../config.json");
 		this.commands = new Collection();
 		this.aliases = new Collection();
-		this.furryAPI = new Yiffy()
-		this.arrayOfSlashCommands = []
+		this.furryAPI = new Yiffy();
+		this.arrayOfSlashCommands = [];
+	}
+
+	public async loadDatabase() {
+		this.database = await createConnection({
+			type: "postgres",
+			host: "localhost",
+			port: 5432,
+			username: "postgres",
+			password: "",
+			database: "frenzy-furs",
+			entities: ["dist/entity/**/*.js"],
+			migrations: ["dist/migration/**/*.js"],
+			synchronize: true,
+			logging: process.env.NODE_ENV !== "production",
+		}).catch((e) => {
+			console.log(`Unable to load database! ${e}`);
+			return process.exit();
+		});
 	}
 
 	public async loadCommands() {
@@ -27,7 +56,7 @@ export default class FuzzyClient extends Client {
 				const file: BaseCommand = new (require(`../commands/${category}/${command}`).default)(this);
 				if (!file || !file.name) return;
 				this.commands.set(file.name, file);
-				if(file.userPermissions.length > 0 || file.ownerOnly) file.defaultPermission = false 
+				if (file.userPermissions.length > 0 || file.ownerOnly) file.defaultPermission = false;
 				const commandOptions: ApplicationCommandOptionData[] = [];
 				file.args?.forEach((arg) => {
 					commandOptions.push({
@@ -43,7 +72,7 @@ export default class FuzzyClient extends Client {
 				this.arrayOfSlashCommands.push({
 					...file,
 					options: commandOptions,
-					run: file.run
+					run: file.run,
 				});
 			});
 		});
@@ -60,6 +89,4 @@ export default class FuzzyClient extends Client {
 			}
 		});
 	}
-
-
 }

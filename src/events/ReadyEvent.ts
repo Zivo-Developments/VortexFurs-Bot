@@ -4,6 +4,7 @@ import {
 	ApplicationCommandPermissions,
 	GuildApplicationCommandPermissionData,
 } from "discord.js";
+import { Client } from "../entity/Client";
 import FuzzyClient from "../lib/FuzzyClient";
 import BaseEvent from "../structures/BaseEvent";
 
