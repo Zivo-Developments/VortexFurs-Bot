@@ -10,9 +10,6 @@ export class Member {
     @Column()
     tokens: number
     @Column()
-    
-    @Column()
     xp: number
-    @OneToMany(() => Fursona, fursona => fursona.ownerUserID)
-    fursonas: Fursona[]
+
 }
