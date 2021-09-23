@@ -1,5 +1,4 @@
 import {Entity, PrimaryGeneratedColumn, Column, OneToMany} from "typeorm";
-import { Fursona } from "./Fursona";
 
 @Entity()
 export class Member {
