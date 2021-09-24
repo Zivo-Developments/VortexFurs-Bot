@@ -6,8 +6,8 @@ export class Guild {
 	id: number;
 	@Column()
 	guildID: string;
-	@Column("simple-array", { default: [] })
-	verifiedRoleListID: string[];
+	@Column({ default: null })
+	verifiedRoleID: string;
 	@Column({ default: null })
 	nickNameLogChannelID: string;
 	@Column({ default: null })
@@ -44,8 +44,8 @@ export class Guild {
 	generalChannel: string;
 	@Column("text", { default: null })
 	welcomeMessage: string;
-	@Column("simple-array", { default: [] })
-	staffRoleListID: string[];
+	@Column({ default: null })
+	staffRoleID: string;
 	@Column({ default: null })
 	pendingVerficiatonChannelID: string
 }

@@ -28,6 +28,7 @@
 		"dev:win": "yarn clean:win && yarn compile && yarn start",
 		"clean": "rm -rf dist",
 		"clean:win": "del /Q /S dist",
-		"compile": "tsc"
+		"compile": "tsc",
+		"test": "jest"
 	}
 }
