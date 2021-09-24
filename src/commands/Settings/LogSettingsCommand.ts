@@ -29,77 +29,77 @@ export default class LogSettingsCommand extends BaseSlashCommand {
 				.addFields([
 					{
 						name: "autoModLogChannelID",
-						value: `${guildData!["autoModLogChannelID"] ? guildData!["autoModLogChannelID"] : "Not Set"}`,
+						value: `${guildData!["autoModLogChannelID"] ? interaction.guild?.channels.cache.get(guildData!["autoModLogChannelID"]) : "Not Set"}`,
 						inline: true,
 					},
 					{
 						name: "banLogChannelID",
-						value: `${guildData!["banLogChannelID"] ? guildData!["banLogChannelID"] : "Not Set"}`,
+						value: `${guildData!["banLogChannelID"] ? interaction.guild?.channels.cache.get(guildData!["banLogChannelID"]) : "Not Set"}`,
 						inline: true,
 					},
 					{
 						name: "channelLogChannelID",
-						value: `${guildData!["channelLogChannelID"] ? guildData!["channelLogChannelID"] : "Not Set"}`,
+						value: `${guildData!["channelLogChannelID"] ? interaction.guild?.channels.cache.get(guildData!["channelLogChannelID"]) : "Not Set"}`,
 						inline: true,
 					},
 					{
 						name: "flagLogChannelID",
-						value: `${guildData!["flagLogChannelID"] ? guildData!["flagLogChannelID"] : "Not Set"}`,
+						value: `${guildData!["flagLogChannelID"] ? interaction.guild?.channels.cache.get(guildData!["flagLogChannelID"]) : "Not Set"}`,
 						inline: true,
 					},
 					{
 						name: "imageLogChannelID",
-						value: `${guildData!["imageLogChannelID"] ? guildData!["imageLogChannelID"] : "Not Set"}`,
+						value: `${guildData!["imageLogChannelID"] ? interaction.guild?.channels.cache.get(guildData!["imageLogChannelID"]) : "Not Set"}`,
 						inline: true,
 					},
 					{
 						name: "joinLogChannelID",
-						value: `${guildData!["joinLogChannelID"] ? guildData!["joinLogChannelID"] : "Not Set"}`,
+						value: `${guildData!["joinLogChannelID"] ? interaction.guild?.channels.cache.get(guildData!["joinLogChannelID"]) : "Not Set"}`,
 						inline: true,
 					},
 					{
 						name: "kickLogChannelID",
-						value: `${guildData!["kickLogChannelID"] ? guildData!["kickLogChannelID"] : "Not Set"}`,
+						value: `${guildData!["kickLogChannelID"] ? interaction.guild?.channels.cache.get(guildData!["kickLogChannelID"]) : "Not Set"}`,
 						inline: true,
 					},
 					{
 						name: "leaveLogChannelID",
-						value: `${guildData!["leaveLogChannelID"] ? guildData!["leaveLogChannelID"] : "Not Set"}`,
+						value: `${guildData!["leaveLogChannelID"] ? interaction.guild?.channels.cache.get(guildData!["leaveLogChannelID"]) : "Not Set"}`,
 						inline: true,
 					},
 					{
 						name: "membersLogChannelID",
-						value: `${guildData!["membersLogChannelID"] ? guildData!["membersLogChannelID"] : "Not Set"}`,
+						value: `${guildData!["membersLogChannelID"] ? interaction.guild?.channels.cache.get(guildData!["membersLogChannelID"]) : "Not Set"}`,
 						inline: true,
 					},
 					{
 						name: "messageLogChannelID",
-						value: `${guildData!["messageLogChannelID"] ? guildData!["messageLogChannelID"] : "Not Set"}`,
+						value: `${guildData!["messageLogChannelID"] ? interaction.guild?.channels.cache.get(guildData!["messageLogChannelID"]) : "Not Set"}`,
 						inline: true,
 					},
 					{
 						name: "modCMDsLogChannelID",
-						value: `${guildData!["modCMDsLogChannelID"] ? guildData!["modCMDsLogChannelID"] : "Not Set"}`,
+						value: `${guildData!["modCMDsLogChannelID"] ? interaction.guild?.channels.cache.get(guildData!["modCMDsLogChannelID"]) : "Not Set"}`,
 						inline: true,
 					},
 					{
 						name: "modmailLogChannelID",
-						value: `${guildData!["modmailLogChannelID"] ? guildData!["modmailLogChannelID"] : "Not Set"}`,
+						value: `${guildData!["modmailLogChannelID"] ? interaction.guild?.channels.cache.get(guildData!["modmailLogChannelID"]) : "Not Set"}`,
 						inline: true,
 					},
 					{
 						name: "nickNameLogChannelID",
-						value: `${guildData!["nickNameLogChannelID"] ? guildData!["nickNameLogChannelID"] : "Not Set"}`,
+						value: `${guildData!["nickNameLogChannelID"] ? interaction.guild?.channels.cache.get(guildData!["nickNameLogChannelID"]) : "Not Set"}`,
 						inline: true,
 					},
 					{
 						name: "vcLogChannelID",
-						value: `${guildData!["vcLogChannelID"] ? guildData!["vcLogChannelID"] : "Not Set"}`,
+						value: `${guildData!["vcLogChannelID"] ? interaction.guild?.channels.cache.get(guildData!["vcLogChannelID"]) : "Not Set"}`,
 						inline: true,
 					},
 					{
 						name: "verificationLogChannelID",
-						value: `${guildData!["verificationLogChannelID"] ? guildData!["verificationLogChannelID"] : "Not Set"}`,
+						value: `${guildData!["verificationLogChannelID"] ? interaction.guild?.channels.cache.get(guildData!["verificationLogChannelID"]) : "Not Set"}`,
 						inline: true,
 					},
 				])
