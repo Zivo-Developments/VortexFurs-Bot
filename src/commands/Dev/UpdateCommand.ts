@@ -31,13 +31,8 @@ export default class UpdateCommand extends BaseSlashCommand {
 
 	  try {
 		  await exec('git stash').toString();
-		  let gitPull = await exec('git pull origin master').toString();
-		  let npmInstall = await exec('yarn').toString();
-		  if (gitPull.length > 1024 || npmInstall.length > 1024) {
-			  npmInstall = "Too big to display, Please Check console";
-			  gitPull = "Too big to display, Please Check console";
-		  }
-
+		  let gitPull = await exec('git pull origin master');
+		  let npmInstall = await exec('yarn');
 		  const complete = new MessageEmbed()
 			  .setAuthor(`${interaction.user.tag}`, `${interaction.user.displayAvatarURL({ dynamic: true })}`)
 			  .setColor(this.client.config.color!)
