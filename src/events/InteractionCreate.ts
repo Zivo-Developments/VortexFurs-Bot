@@ -126,53 +126,56 @@ export default class ReadyEvent extends BaseEvent {
 						},
 						true
 					);
-					let channel = await channelResolver(client, response.content);
-					const guildRepo = client.database.getCustomRepository(GuildRepo);
-					const guildData = await guildRepo.findOne({ guildID: interaction.guild?.id });
-					if (channel && channel.isText() && channel instanceof TextChannel) {
-						// @ts-expect-error
-						if (guildData[interaction.values[0]] === channel.id) {
-							return interaction.editReply("**You can't set the channel to what it currently is**");
+					if (response.content !== "cancel") {
+						let channel = await channelResolver(client, response.content);
+						const guildRepo = client.database.getCustomRepository(GuildRepo);
+						const guildData = await guildRepo.findOne({ guildID: interaction.guild?.id });
+						if (channel && channel.isText() && channel instanceof TextChannel) {
+							// @ts-expect-error
+							if (guildData[interaction.values[0]] === channel.id) {
+								return interaction.editReply("**You can't set the channel to what it currently is**");
+							}
+							guildRepo.update({ guildID: interaction.guild!.id }, { [interaction.values[0]]: channel.id }).then(() => {
+								const success = new MessageEmbed()
+									.setAuthor(interaction.user.tag, interaction.user.displayAvatarURL({ dynamic: true }))
+									.setColor(client.config.color)
+									.setDescription(`${interaction.values[0]} is now set to ${channel}!`)
+									.setFooter(`User ID: ${interaction.user.id}`);
+								interaction.channel?.send({ embeds: [success] }).then((m) => {
+									setTimeout(() => {
+										m.delete();
+									}, 60000);
+								});
+							});
+						} else {
+							do {
+								const response = await client.utils.awaitReply(
+									interaction.channel!,
+									"**We cannot find the channel! Make sure you mention or provide the id of that channel** Please send the channel (in a correct form)",
+									{
+										max: 1,
+										time: 60000 * 10,
+										filter: (m) => m.author.id === interaction.user.id,
+									},
+									true
+								);
+								channel = await channelResolver(client, response.content);
+							} while (!channel);
+							guildRepo.update({ guildID: interaction.guild!.id }, { [interaction.values[0]]: channel.id }).then(() => {
+								const success = new MessageEmbed()
+									.setAuthor(interaction.user.tag, interaction.user.displayAvatarURL({ dynamic: true }))
+									.setColor(client.config.color)
+									.setDescription(`${interaction.values[0]} is now set to ${channel}!`)
+									.setFooter(`User ID: ${interaction.user.id}`);
+								interaction.channel?.send({ embeds: [success] }).then((m) => {
+									setTimeout(() => {
+										m.delete();
+									}, 60000);
+								});
+							});
 						}
-						guildRepo.update({ guildID: interaction.guild!.id }, { [interaction.values[0]]: channel.id }).then(() => {
-							const success = new MessageEmbed()
-								.setAuthor(interaction.user.tag, interaction.user.displayAvatarURL({ dynamic: true }))
-								.setColor(client.config.color)
-								.setDescription(`${interaction.values[0]} is now set to ${channel}!`)
-								.setFooter(`User ID: ${interaction.user.id}`);
-							interaction.channel?.send({ embeds: [success] }).then((m) => {
-								setTimeout(() => {
-									m.delete();
-								}, 60000);
-							});
-						});
-					} else {
-						do {
-							const response = await client.utils.awaitReply(
-								interaction.channel!,
-								"**We cannot find the channel! Make sure you mention or provide the id of that channel** Please send the channel (in a correct form)",
-								{
-									max: 1,
-									time: 60000 * 10,
-									filter: (m) => m.author.id === interaction.user.id,
-								},
-								true
-							);
-							channel = await channelResolver(client, response.content);
-						} while (!channel);
-						guildRepo.update({ guildID: interaction.guild!.id }, { [interaction.values[0]]: channel.id }).then(() => {
-							const success = new MessageEmbed()
-								.setAuthor(interaction.user.tag, interaction.user.displayAvatarURL({ dynamic: true }))
-								.setColor(client.config.color)
-								.setDescription(`${interaction.values[0]} is now set to ${channel}!`)
-								.setFooter(`User ID: ${interaction.user.id}`);
-							interaction.channel?.send({ embeds: [success] }).then((m) => {
-								setTimeout(() => {
-									m.delete();
-								}, 60000);
-							});
-						});
 					}
+					return;
 			}
 		}
 	}
