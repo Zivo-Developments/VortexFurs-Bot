@@ -109,7 +109,7 @@ export default class LogSettingsCommand extends BaseSlashCommand {
 				new MessageButton().setCustomId("edit-logging").setLabel("Edit").setStyle("PRIMARY"),
 				new MessageButton().setCustomId("close").setLabel("Close").setStyle("DANGER")
 			);
-            return interaction.reply({ embeds: [embed], components: [actionButtons] })
+            return interaction.reply({ embeds: [embed], components: [actionButtons], ephemeral: true })
             
 		}
 	}

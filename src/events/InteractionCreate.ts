@@ -104,7 +104,7 @@ export default class ReadyEvent extends BaseEvent {
 					if (!msg) {
 						return interaction.reply("Unable to get the message!");
 					}
-					msg.edit({ embeds: [embed], components: [menu] });
+					interaction.reply({ embeds: [embed], components: [menu], ephemeral: true });
 					break;
 				case "close":
 					interaction.deleteReply();
