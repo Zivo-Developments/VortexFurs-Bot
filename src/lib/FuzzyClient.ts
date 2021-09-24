@@ -13,6 +13,7 @@ import { NamespaceExport } from "typescript";
 import BaseCommand from "../structures/BaseCommand";
 import Yiffy from "yiffy";
 import { Connection, createConnection } from "typeorm";
+import Utils from "../utils/Utils";
 
 export default class FuzzyClient extends Client {
 	commands: Collection<string, BaseCommand>;
@@ -20,6 +21,7 @@ export default class FuzzyClient extends Client {
 	furryAPI: Yiffy;
 	arrayOfSlashCommands: (ChatInputApplicationCommandData & BaseCommand)[];
 	config: { color: ColorResolvable; guildID: string; ownerID: string };
+	utils: Utils
 	database: Connection;
 	constructor(opts: ClientOptions) {
 		super(opts);
@@ -28,6 +30,7 @@ export default class FuzzyClient extends Client {
 		this.aliases = new Collection();
 		this.furryAPI = new Yiffy();
 		this.arrayOfSlashCommands = [];
+		this.utils = new Utils()
 	}
 
 	public async loadDatabase() {

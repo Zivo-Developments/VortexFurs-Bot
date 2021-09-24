@@ -47,5 +47,5 @@ export class Guild {
 	@Column({ default: null })
 	staffRoleID: string;
 	@Column({ default: null })
-	pendingVerficiatonChannelID: string
+	pendingVerficiatonChannelID: string;
 }

@@ -18,15 +18,15 @@ export default class ReadyEvent extends BaseEvent {
 	}
 	async run(client: FuzzyClient) {
 		const guild = client.guilds.cache.get(client.config.guildID);
-		if(!guild){
-			console.error("Cannot find the guild!")
-			process.exit()
+		if (!guild) {
+			console.error("Cannot find the guild!");
+			process.exit();
 		}
 		const fullPerms: GuildApplicationCommandPermissionData[] = [];
-		const guildRepo = client.database.getCustomRepository(GuildRepo)
-		const guildData = guildRepo.findOneOrCreateByGID(client, guild.id)
+		const guildRepo = client.database.getCustomRepository(GuildRepo);
+		const guildData = guildRepo.findOneOrCreateByGID(client, guild.id);
 		await guild!.commands.set(client.arrayOfSlashCommands).then(async (cmd) => {
-			console.log("Setting (/) Permissions")
+			console.log("Setting (/) Permissions");
 			const getRoles = (cmdName: string) => {
 				const permsRequired = client.arrayOfSlashCommands.find((x) => x.name === cmdName)!.userPermissions;
 				if (permsRequired.length === 0) return;
@@ -41,11 +41,13 @@ export default class ReadyEvent extends BaseEvent {
 				if (checkOwner(command.name)) {
 					fullPerms.push({
 						id: command.id,
-						permissions: [{
-							id: client.config.ownerID,
-							permission: true,
-							type: "USER"
-						}],
+						permissions: [
+							{
+								id: client.config.ownerID,
+								permission: true,
+								type: "USER",
+							},
+						],
 					});
 				}
 

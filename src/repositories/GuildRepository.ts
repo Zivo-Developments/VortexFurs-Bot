@@ -7,11 +7,11 @@ export class GuildRepo extends Repository<Guild> {
 	public async findOneOrCreateByGID(client: FuzzyClient, guildID: string) {
 		const guild = await this.findOne({ guildID: guildID });
 		if (!guild) {
-			let guild = new Guild()
-            guild.guildID = guildID;
-            await this.save(guild).then(() => {
-                console.log(`Created Guild Data for Guild ID: ${guildID}`)
-            })
+			let guild = new Guild();
+			guild.guildID = guildID;
+			await this.save(guild).then(() => {
+				console.log(`Created Guild Data for Guild ID: ${guildID}`);
+			});
 		}
 		return guild;
 	}

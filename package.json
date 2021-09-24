@@ -10,10 +10,13 @@
 	"dependencies": {
 		"@discordjs/rest": "^0.1.0-canary.0",
 		"@types/beautify": "^0.0.0",
+		"@types/lodash": "^4.14.173",
 		"beautify": "^0.0.8",
 		"discord-api-types": "^0.23.1",
 		"discord.js": "^13.1.0",
 		"dotenv": "^10.0.0",
+		"hastebin-gen": "^2.0.5",
+		"lodash": "^4.17.21",
 		"pg": "^8.7.1",
 		"random-puppy": "^1.1.0",
 		"reflect-metadata": "^0.1.13",

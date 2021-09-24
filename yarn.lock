@@ -103,6 +103,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/lodash@npm:^4.14.173":
+  version: 4.14.173
+  resolution: "@types/lodash@npm:4.14.173"
+  checksum: 9e97ef5816299e5470db1cb32a93e981af60f74f18a35d045ed4caf224a065df96bfae6e444ec96aa392fc01258592b965d840ae042eef77ef719a578c7daef8
+  languageName: node
+  linkType: hard
+
 "@types/node@npm:*":
   version: 16.9.6
   resolution: "@types/node@npm:16.9.6"
@@ -579,10 +586,13 @@ __metadata:
   dependencies:
     "@discordjs/rest": ^0.1.0-canary.0
     "@types/beautify": ^0.0.0
+    "@types/lodash": ^4.14.173
     beautify: ^0.0.8
     discord-api-types: ^0.23.1
     discord.js: ^13.1.0
     dotenv: ^10.0.0
+    hastebin-gen: ^2.0.5
+    lodash: ^4.17.21
     pg: ^8.7.1
     random-puppy: ^1.1.0
     reflect-metadata: ^0.1.13
@@ -659,6 +669,15 @@ __metadata:
   version: 4.0.0
   resolution: "has-flag@npm:4.0.0"
   checksum: 261a1357037ead75e338156b1f9452c016a37dcd3283a972a30d9e4a87441ba372c8b81f818cd0fbcd9c0354b4ae7e18b9e1afa1971164aef6d18c2b6095a8ad
+  languageName: node
+  linkType: hard
+
+"hastebin-gen@npm:^2.0.5":
+  version: 2.0.5
+  resolution: "hastebin-gen@npm:2.0.5"
+  dependencies:
+    node-fetch: ^2.6.0
+  checksum: 3842e30f3bb91d77da5652f47f2b26354d14cfd3abe28efd5d19fcda8133e057fdff12624c0aa840e5a7a53114b33bd649707eea032a117b841179c8fc7ebc08
   languageName: node
   linkType: hard
 
@@ -787,6 +806,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lodash@npm:^4.17.21":
+  version: 4.17.21
+  resolution: "lodash@npm:4.17.21"
+  checksum: eb835a2e51d381e561e508ce932ea50a8e5a68f4ebdd771ea240d3048244a8d13658acbd502cd4829768c56f2e16bdd4340b9ea141297d472517b83868e677f7
+  languageName: node
+  linkType: hard
+
 "lowercase-keys@npm:^1.0.0":
   version: 1.0.1
   resolution: "lowercase-keys@npm:1.0.1"
@@ -856,7 +882,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-fetch@npm:^2.6.1":
+"node-fetch@npm:^2.6.0, node-fetch@npm:^2.6.1":
   version: 2.6.5
   resolution: "node-fetch@npm:2.6.5"
   dependencies:
