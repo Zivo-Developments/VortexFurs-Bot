@@ -48,4 +48,6 @@ export class Guild {
 	staffRoleID: string;
 	@Column({ default: null })
 	pendingVerficiatonChannelID: string;
+	@Column({ default: null })
+	eventLogChannel: string;
 }

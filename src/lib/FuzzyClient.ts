@@ -20,7 +20,7 @@ export default class FuzzyClient extends Client {
 	aliases: Collection<string, string>;
 	furryAPI: Yiffy;
 	arrayOfSlashCommands: (ChatInputApplicationCommandData & BaseCommand)[];
-	config: { color: ColorResolvable; guildID: string; ownerID: string };
+	config: { color: ColorResolvable; guildID: string; ownerID: string, devLogsID: string };
 	utils: Utils
 	database: Connection;
 	constructor(opts: ClientOptions) {
