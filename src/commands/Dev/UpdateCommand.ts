@@ -37,8 +37,8 @@ export default class UpdateCommand extends BaseSlashCommand {
 			  .setAuthor(`${interaction.user.tag}`, `${interaction.user.displayAvatarURL({ dynamic: true })}`)
 			  .setColor(this.client.config.color!)
 			  .setTitle('Update - Bot was updated!')
-			  .addField(`📥 Git Pull`, `\`\`\`${gitPull}\`\`\``)
-			  .addField(`🧶 Yarn Install`, `\`\`\`${npmInstall}\`\`\``)
+			  .addField(`📥 Git Pull`, `\`\`\`${gitPull.stdout}\`\`\``)
+			  .addField(`🧶 Yarn Install`, `\`\`\`${npmInstall.stdout}\`\`\``)
 			  .setTimestamp()
 			  .setFooter(`User ID: ${interaction.user.id}`);
 		  await interaction.editReply({ embeds: [complete] });
