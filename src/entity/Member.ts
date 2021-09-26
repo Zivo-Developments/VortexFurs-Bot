@@ -1,4 +1,5 @@
 import {Entity, PrimaryGeneratedColumn, Column, OneToMany} from "typeorm";
+import { Fursona } from "./Fursona";
 
 @Entity()
 export class Member {
@@ -10,5 +11,7 @@ export class Member {
     tokens: number
     @Column()
     xp: number
+    @OneToMany(() => Fursona, sona => sona.owner)
+    sonas: Fursona[]
 
 }

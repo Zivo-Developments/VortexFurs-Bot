@@ -56,6 +56,7 @@ export default class FuzzyClient extends Client {
 		fs.readdirSync("dist/commands/").forEach((category) => {
 			console.log(`Loading (/) Category: ${category}`);
 			fs.readdirSync(`dist/commands/${category}`).forEach((command) => {
+				console.log(`Loading (/) Command: ${command}`)
 				const file: BaseCommand = new (require(`../commands/${category}/${command}`).default)(this);
 				if (!file || !file.name) return;
 				this.commands.set(file.name, file);
