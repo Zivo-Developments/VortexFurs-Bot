@@ -1,18 +1,22 @@
-import { Message, MessageCollector, MessageEmbed, ReactionCollector, TextChannel, User } from "discord.js";
+import { Message, MessageEmbed, TextChannel } from "discord.js";
 
 export default class DiscordMenu {
-	// TODO: Change it to use Discord Buttons Instead of reactions
+	channel: any;
+	pages: MessageEmbed[];
+	time: number;
+	reactions: { first: string; back: string; next: string; last: string; stop: string };
+	page: number;
+	messages: { message: string; fn: any }[];
+	msg: Message;
+	reactionCollector: any;
+	messageCollector: any;
 	constructor(
-		public channel: TextChannel,
-		public uid: string,
-		public pages: MessageEmbed[],
-		public messages: { message: string; fn: any }[] = [],
-		public time = 180000,
-		public reactions = { first: "⏪", back: "◀", next: "▶", last: "⏩", stop: "⏹" },
-		public page: number,
-		public msg: Message,
-		public reactionCollector: ReactionCollector,
-		public messageCollector: MessageCollector
+		channel: TextChannel,
+		uid: string,
+		pages: MessageEmbed[],
+		messages: { message: string; fn: any }[] = [],
+		time = 180000,
+		reactions = { first: "⏪", back: "◀", next: "▶", last: "⏩", stop: "⏹" }
 	) {
 		this.channel = channel;
 		this.pages = pages;
@@ -27,12 +31,10 @@ export default class DiscordMenu {
 			this.createMessageCollector(uid);
 		});
 	}
-	
 	select(pg = 1) {
 		this.page = pg;
 		this.msg.edit({ embeds: [this.pages[pg - 1]] });
 	}
-
 	createReactionCollector(uid: any) {
 		const reactionCollector = this.msg.createReactionCollector({
 			time: this.time,
@@ -58,30 +60,29 @@ export default class DiscordMenu {
 		});
 	}
 	createMessageCollector(uid: any) {
-		this.messageCollector = this.channel.createMessageCollector({
-			filter: (m: Message) => m.author.id === uid && this.messages.some((m2) => m2.message.toLowerCase() === m.cleanContent.toLowerCase()),
-			time: this.time,
-		});
-		
-		this.messageCollector.on("collect", (m: { cleanContent: string }) => {
+		const messageCollector = this.channel.createMessageCollector(
+			(m: { author: { id: any }; cleanContent: string }) =>
+				m.author.id === uid && this.messages.some((m2) => m2.message.toLowerCase() === m.cleanContent.toLowerCase()),
+			{ time: this.time }
+		);
+		this.messageCollector = messageCollector;
+		messageCollector.on("collect", (m: { cleanContent: string }) => {
+			console.log("gay");
 			this.endCollection();
 			const msgTrigger = this.messages.find((m2: { message: string }) => m2.message.toLowerCase() === m.cleanContent.toLowerCase());
 			if (msgTrigger && msgTrigger.fn) {
 				msgTrigger.fn(m);
 			}
 		});
-
-		this.messageCollector.on("end", () => {
+		messageCollector.on("end", () => {
 			this.endCollection();
 		});
 	}
-
 	async endCollection() {
 		this.msg.delete().catch(() => {});
 		if (this.reactionCollector && !this.reactionCollector.ended) this.reactionCollector.stop();
 		if (this.messageCollector && !this.messageCollector.ended) this.messageCollector.stop();
 	}
-
 	async addReactions() {
 		if (!this.msg.deleted) {
 			if (this.reactions.first) await this.msg.react(this.reactions.first).catch(() => {});
