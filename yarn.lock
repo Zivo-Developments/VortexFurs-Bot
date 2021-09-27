@@ -135,6 +135,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/uuid@npm:^8.3.1":
+  version: 8.3.1
+  resolution: "@types/uuid@npm:8.3.1"
+  checksum: b41bdc5e86c6f0f1899306be10455636da0f2168c9489b869edd6837ddeb7c0e501b1ff7d857402462986bada2a379125743dd895fa801d03437cd632116a373
+  languageName: node
+  linkType: hard
+
 "@types/ws@npm:^7.4.7":
   version: 7.4.7
   resolution: "@types/ws@npm:7.4.7"
@@ -597,6 +604,7 @@ __metadata:
     "@types/beautify": ^0.0.0
     "@types/lodash": ^4.14.173
     "@types/moment": ^2.13.0
+    "@types/uuid": ^8.3.1
     beautify: ^0.0.8
     discord-api-types: ^0.23.1
     discord.js: ^13.1.0
@@ -609,6 +617,7 @@ __metadata:
     reflect-metadata: ^0.1.13
     typeorm: ^0.2.37
     typescript: ^4.4.3
+    uuid: ^8.3.2
     yiffy: ^2.0.14
   languageName: unknown
   linkType: soft
@@ -1477,6 +1486,15 @@ typescript@^4.4.3:
   version: 1.0.2
   resolution: "util-deprecate@npm:1.0.2"
   checksum: 474acf1146cb2701fe3b074892217553dfcf9a031280919ba1b8d651a068c9b15d863b7303cb15bd00a862b498e6cf4ad7b4a08fb134edd5a6f7641681cb54a2
+  languageName: node
+  linkType: hard
+
+"uuid@npm:^8.3.2":
+  version: 8.3.2
+  resolution: "uuid@npm:8.3.2"
+  bin:
+    uuid: dist/bin/uuid
+  checksum: 5575a8a75c13120e2f10e6ddc801b2c7ed7d8f3c8ac22c7ed0c7b2ba6383ec0abda88c905085d630e251719e0777045ae3236f04c812184b7c765f63a70e58df
   languageName: node
   linkType: hard
 

@@ -17,42 +17,32 @@ export default class UpdateCommand extends BaseSlashCommand {
 		});
 	}
 	async run(interaction: CommandInteraction) {
-		  // Sends an embed showing the it's updating the bot
-		  const embed = new MessageEmbed()
-		  .setAuthor(`${interaction.user.tag}`, `${interaction.user.displayAvatarURL({ dynamic: true })}`)
-		  .setTitle('📥  Update - Updating bot...')
-		  .setColor(this.client.config.color!)
-		  .setDescription('⏲️ This may take a bit...')
-		  .setTimestamp()
-		  .setFooter(`User ID: ${interaction.user.id}`);
+		// Sends an embed showing the it's updating the bot
+		const embed = new MessageEmbed()
+			.setAuthor(`${interaction.user.tag}`, `${interaction.user.displayAvatarURL({ dynamic: true })}`)
+			.setTitle("📥  Update - Updating bot...")
+			.setColor(this.client.config.color!)
+			.setDescription("⏲️ This may take a bit...")
+			.setTimestamp()
+			.setFooter(`User ID: ${interaction.user.id}`);
 
-	  // Makes what is sent a message variable
-	  await interaction.reply({ embeds: [embed] });
+		// Makes what is sent a message variable
+		interaction.reply({ embeds: [embed] });
+		exec("git stash", (err, res) => {
+			if (err) throw new Error(err.message);
+			embed.addField("📥 Git Stash", res);
+		});
 
-	  try {
-		  await exec('git stash').toString();
-		  let gitPull = await exec('git pull origin master');
-		  let npmInstall = await exec('yarn');
-		  const complete = new MessageEmbed()
-			  .setAuthor(`${interaction.user.tag}`, `${interaction.user.displayAvatarURL({ dynamic: true })}`)
-			  .setColor(this.client.config.color!)
-			  .setTitle('Update - Bot was updated!')
-			  .addField(`📥 Git Pull`, `\`\`\`${gitPull.stdout}\`\`\``)
-			  .addField(`🧶 Yarn Install`, `\`\`\`${npmInstall.stdout}\`\`\``)
-			  .setTimestamp()
-			  .setFooter(`User ID: ${interaction.user.id}`);
-		  await interaction.editReply({ embeds: [complete] });
-	  } catch (e) {
-		  const error = new MessageEmbed()
-			  .setAuthor(`${interaction.user.tag}`, `${interaction.user.displayAvatarURL({ dynamic: true })}`)
-			  .setColor(this.client.config.color!)
-			  .setTitle("ERROR! - Bot didn't update!")
-			  .setDescription(
-				  `Please pray the lords and hope that the update didn't mess up the prod files.(Please ssh into the server and resolve the errors) \n \`\`\`${e}\`\`\``
-			  )
-			  .setTimestamp()
-			  .setFooter(`User ID: ${interaction.user.id}`);
-		  return interaction.reply({ embeds: [error] });
-	  }
+		exec("git pull origin master", (err, res) => {
+			if (err) throw new Error(err.message);
+			embed.addField("📥 Git Pull", res);
+		});
+		exec("yarn", (err, res) => {
+			if (err) throw new Error(err.message);
+			embed.addField("🧶 Yarn", res);
+		});
+
+		embed.setTitle("Update Complete!");
+		await interaction.editReply({ embeds: [embed] });
 	}
 }

@@ -35,7 +35,9 @@ export default class FursonaCommand extends BaseCommand {
 		switch (interaction.options.getSubcommand()) {
 			case "create":
 				const sonaBuilder = new Fursona(this.client, interaction);
-				sonaBuilder.initalize()
+				await sonaBuilder.startQuestion();
+				const { age, height, name, sexuality, sonaUID, species } = sonaBuilder.toJSON();
+				// TODO: Save this to the Database
 				break;
 			case "remove":
 				break;

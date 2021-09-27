@@ -10,6 +10,8 @@ export class Fursona {
 	@Column({ default: null })
 	sonaName: string;
 	@Column({ default: null })
+	sonaID: string;
+	@Column({ default: null })
 	species: string;
 	@Column({ default: null })
 	age: number;
