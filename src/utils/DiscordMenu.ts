@@ -1,22 +1,18 @@
-import { Message, MessageEmbed, TextChannel } from "discord.js";
+import { Message, MessageCollector, MessageEmbed, ReactionCollector, TextChannel, User } from "discord.js";
 
 export default class DiscordMenu {
-	channel: any;
-	pages: MessageEmbed[];
-	time: number;
-	reactions: { first: string; back: string; next: string; last: string; stop: string };
-	page: number;
-	messages: { message: string; fn: any }[];
-	msg: Message;
-	reactionCollector: any;
-	messageCollector: any;
+	// TODO: Change it to use Discord Buttons Instead of reactions
 	constructor(
-		channel: TextChannel,
-		uid: string,
-		pages: MessageEmbed[],
-		messages: { message: string; fn: any }[] = [],
-		time = 180000,
-		reactions = { first: "⏪", back: "◀", next: "▶", last: "⏩", stop: "⏹" }
+		public channel: TextChannel,
+		public uid: string,
+		public pages: MessageEmbed[],
+		public messages: { message: string; fn: any }[] = [],
+		public time = 180000,
+		public reactions = { first: "⏪", back: "◀", next: "▶", last: "⏩", stop: "⏹" },
+		public page?: number,
+		public msg?: Message,
+		public reactionCollector?: ReactionCollector,
+		public messageCollector?: MessageCollector
 	) {
 		this.channel = channel;
 		this.pages = pages;
@@ -31,12 +27,14 @@ export default class DiscordMenu {
 			this.createMessageCollector(uid);
 		});
 	}
+
 	select(pg = 1) {
 		this.page = pg;
-		this.msg.edit({ embeds: [this.pages[pg - 1]] });
+		this.msg!.edit({ embeds: [this.pages[pg - 1]] });
 	}
+
 	createReactionCollector(uid: any) {
-		const reactionCollector = this.msg.createReactionCollector({
+		const reactionCollector = this.msg!.createReactionCollector({
 			time: this.time,
 			filter: (r, u) => u.id == uid,
 		});
@@ -45,9 +43,9 @@ export default class DiscordMenu {
 			if (r.emoji.name == this.reactions.first) {
 				if (this.page != 1) this.select(1);
 			} else if (r.emoji.name == this.reactions.back) {
-				if (this.page != 1) this.select(this.page - 1);
+				if (this.page != 1) this.select(this.page! - 1);
 			} else if (r.emoji.name == this.reactions.next) {
-				if (this.page != this.pages.length) this.select(this.page + 1);
+				if (this.page != this.pages.length) this.select(this.page! + 1);
 			} else if (r.emoji.name == this.reactions.last) {
 				if (this.page != this.pages.length) this.select(this.pages.length);
 			} else if (r.emoji.name == this.reactions.stop) {
@@ -60,36 +58,37 @@ export default class DiscordMenu {
 		});
 	}
 	createMessageCollector(uid: any) {
-		const messageCollector = this.channel.createMessageCollector(
-			(m: { author: { id: any }; cleanContent: string }) =>
-				m.author.id === uid && this.messages.some((m2) => m2.message.toLowerCase() === m.cleanContent.toLowerCase()),
-			{ time: this.time }
-		);
-		this.messageCollector = messageCollector;
-		messageCollector.on("collect", (m: { cleanContent: string }) => {
-			console.log("gay");
+		this.messageCollector = this.channel.createMessageCollector({
+			filter: (m: Message) => m.author.id === uid && this.messages.some((m2) => m2.message.toLowerCase() === m.cleanContent.toLowerCase()),
+			time: this.time,
+		});
+
+		this.messageCollector.on("collect", (m: { cleanContent: string }) => {
 			this.endCollection();
 			const msgTrigger = this.messages.find((m2: { message: string }) => m2.message.toLowerCase() === m.cleanContent.toLowerCase());
 			if (msgTrigger && msgTrigger.fn) {
 				msgTrigger.fn(m);
 			}
 		});
-		messageCollector.on("end", () => {
+
+		this.messageCollector.on("end", () => {
 			this.endCollection();
 		});
 	}
+
 	async endCollection() {
-		this.msg.delete().catch(() => {});
+		this.msg!.delete().catch(() => {});
 		if (this.reactionCollector && !this.reactionCollector.ended) this.reactionCollector.stop();
 		if (this.messageCollector && !this.messageCollector.ended) this.messageCollector.stop();
 	}
+
 	async addReactions() {
-		if (!this.msg.deleted) {
-			if (this.reactions.first) await this.msg.react(this.reactions.first).catch(() => {});
-			if (this.reactions.back) await this.msg.react(this.reactions.back).catch(() => {});
-			if (this.reactions.next) await this.msg.react(this.reactions.next).catch(() => {});
-			if (this.reactions.last) await this.msg.react(this.reactions.last).catch(() => {});
-			if (this.reactions.stop) await this.msg.react(this.reactions.stop).catch(() => {});
+		if (!this.msg!.deleted) {
+			if (this.reactions.first) await this.msg?.react(this.reactions.first).catch(() => {});
+			if (this.reactions.back) await this.msg?.react(this.reactions.back).catch(() => {});
+			if (this.reactions.next) await this.msg?.react(this.reactions.next).catch(() => {});
+			if (this.reactions.last) await this.msg?.react(this.reactions.last).catch(() => {});
+			if (this.reactions.stop) await this.msg?.react(this.reactions.stop).catch(() => {});
 		}
 	}
 }
