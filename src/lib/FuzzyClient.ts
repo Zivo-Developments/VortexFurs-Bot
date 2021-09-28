@@ -36,11 +36,11 @@ export default class FuzzyClient extends Client {
 	public async loadDatabase() {
 		this.database = await createConnection({
 			type: "postgres",
-			host: "localhost",
-			port: 5432,
-			username: "postgres",
-			password: "Yadi2005",
-			database: "frenzy-furs",
+			host: process.env.DB_HOST,
+			port: Number(process.env.DB_PORT),
+			username: process.env.DB_USER,
+			password: process.env.DB_PASS,
+			database: process.env.DB_NAME,
 			entities: ["dist/entity/**/*.js"],
 			migrations: ["dist/migration/**/*.js"],
 			synchronize: true,
