@@ -1,4 +1,21 @@
+# Node
 node_modules
+
+# Out
 dist
+
+# Configs
 .env
 config.json
+
+# yarn
+.yarn/*
+!.yarn/cache
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
+# IntelliJ
+.idea
