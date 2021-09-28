@@ -6,7 +6,7 @@ export class Fursona {
 	@PrimaryGeneratedColumn()
 	_id: number;
 	@ManyToOne(() => Member, (member) => member.sonas)
-	owner: Member[];
+	owner: Member;
 	@Column({ default: null })
 	sonaName: string;
 	@Column({ default: null })
@@ -17,10 +17,6 @@ export class Fursona {
 	age: number;
 	@Column({ default: null })
 	height: string;
-	@Column({ type: "simple-array" })
-	likes: string[];
-	@Column({ type: "simple-array" })
-	dislikes: string[];
 	@Column({ default: null })
 	sonaSexuality: string;
 }
