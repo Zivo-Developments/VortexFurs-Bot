@@ -24,7 +24,7 @@ export default class ReadyEvent extends BaseEvent {
 		}
 		const fullPerms: GuildApplicationCommandPermissionData[] = [];
 		const guildRepo = client.database.getCustomRepository(GuildRepo);
-		const guildData = guildRepo.findOneOrCreateByGID(client, guild.id);
+		const guildData = guildRepo.findOrCreate({ guildID: guild.id }, { guildID: guild.id });
 		await guild!.commands.set(client.arrayOfSlashCommands).then(async (cmd) => {
 			console.log("Setting (/) Permissions");
 			const getRoles = (cmdName: string) => {

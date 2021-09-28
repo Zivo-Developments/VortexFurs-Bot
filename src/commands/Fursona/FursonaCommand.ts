@@ -2,6 +2,7 @@ import { CommandInteraction, MessageActionRow, MessageComponentInteraction, Mess
 import FuzzyClient from "../../lib/FuzzyClient";
 import BaseCommand from "../../structures/BaseCommand";
 import Fursona from "../../utils/Fursona";
+import { FursonaRepo } from "../../repositories/FursonaRepository";
 
 export default class FursonaCommand extends BaseCommand {
 	constructor(client: FuzzyClient) {
@@ -35,9 +36,18 @@ export default class FursonaCommand extends BaseCommand {
 		switch (interaction.options.getSubcommand()) {
 			case "create":
 				const sonaBuilder = new Fursona(this.client, interaction);
+				const sonaRepo = this.client.database.getCustomRepository(FursonaRepo);
 				await sonaBuilder.startQuestion();
 				const { age, height, name, sexuality, sonaUID, species } = sonaBuilder.toJSON();
-				// TODO: Save this to the Database
+				sonaRepo.createSona({ age, height, sonaName: name, sonaSexuality: sexuality, sonaID: sonaUID, species }).then(() => {
+					const embed = new MessageEmbed()
+					.setAuthor(interaction.user.tag, interaction.user.displayAvatarURL({ dynamic: true }))
+					.setColor(this.client.config.color)
+					.setDescription(`Your sona has been created! To View or Further Customize it go to [https://hozol.xyz](https://hozol.xyz)`)
+					.setTimestamp()
+					.setFooter(`User ID ${interaction.user.id}`)
+					interaction.editReply({ embeds: [embed] })
+				});
 				break;
 			case "remove":
 				break;
