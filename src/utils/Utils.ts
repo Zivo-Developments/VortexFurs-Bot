@@ -33,6 +33,7 @@ export default class Utils {
 		throw new Error("There was a problem waiting for your message, please try again!");
 	}
 
+	// TODO
 	public async checkPosition(interaction: CommandInteraction, member: GuildMember) {
 		const botPosition = interaction.guild?.me?.roles.highest.position;
 		const userPosition = member.roles.highest.position;
