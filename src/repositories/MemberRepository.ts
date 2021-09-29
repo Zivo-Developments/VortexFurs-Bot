@@ -3,7 +3,7 @@ import { DeepPartial, EntityRepository, FindConditions, Repository } from "typeo
 import FuzzyClient from "../lib/FuzzyClient";
 import { Member } from "../entity/Member";
 
-@EntityRepository(Guild)
+@EntityRepository(Member)
 export class MemberRepo extends Repository<Member> {
 	public async findOrCreate(condition: FindConditions<Member>, create: DeepPartial<Member>[]) {
 		const member = await this.findOne(condition);

@@ -1,4 +1,5 @@
 import {Entity, PrimaryGeneratedColumn, Column, OneToMany} from "typeorm";
+import { ModCase } from "./ModCase";
 import { Fursona } from "./Fursona";
 
 @Entity()
@@ -11,7 +12,10 @@ export class Member {
     tokens: number
     @Column()
     xp: number
+    @Column({ default: null })
+	verified: boolean;
     @OneToMany(() => Fursona, sona => sona.owner)
     sonas: Fursona[]
-
+    @OneToMany(() => ModCase, cases => cases.violator)
+    cases: ModCase[]
 }
