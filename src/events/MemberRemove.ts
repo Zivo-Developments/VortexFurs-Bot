@@ -34,9 +34,9 @@ export default class MemberCreateEvent extends BaseEvent {
 				const embed = new MessageEmbed()
 					.setAuthor(`${member.user.tag} (${member.user.id})`, member.user.displayAvatarURL({ dynamic: true }))
 					.setColor("RED")
-					.setTitle("A Member Joined the Guild!")
+					.setTitle("A Member Left the Guild!")
 					.setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
-					.addField(`Time Spent in the Guild`, `<t:${member.joinedAt}:R>`)
+					.addField(`Time Spent in the Guild`, `<t:${Math.floor(member.joinedAt?.getTime()! / 1000)}:R>`)
 					.addField(`Roles`, member.roles.cache.map((role) => role).join(", "))
 					.setTimestamp()
 					.setFooter(`User ID: ${member.user.id}`);

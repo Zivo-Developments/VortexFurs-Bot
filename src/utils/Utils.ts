@@ -33,22 +33,22 @@ export default class Utils {
 		throw new Error("There was a problem waiting for your message, please try again!");
 	}
 
-	// TODO
-	public async checkPosition(interaction: CommandInteraction, member: GuildMember) {
-		const botPosition = interaction.guild?.me?.roles.highest.position;
-		const userPosition = member.roles.highest.position;
-		const modPosition = interaction.member?.roles.highest.position;
+	public async checkPosition(member: GuildMember, violator: GuildMember) {
+		const botPosition = member.guild?.me?.roles.highest.position;
+		const userPosition = violator.roles.highest.position;
+		const modPosition = member.roles.highest.position;
 		if (botPosition! <= userPosition) {
 			return [
 				false,
-				`The bot's highest role (${message.guild?.me?.roles.highest}) must be above the user's highest role (${member.roles.highest}) in order to ban that user`,
+				`The bot's highest role (${member.guild?.me?.roles.highest}) must be above the user's highest role (${violator.roles.highest}) in order to ban that user`,
 			];
 		} else if (modPosition! <= userPosition) {
 			return [
 				false,
-				`Your highest role (${message.member?.roles.highest}) must be higher than the user's highest role (${member.roles.highest}) in order for me to ban that user`,
+				`Your highest role (${member?.roles.highest}) must be higher than the user's highest role (${violator.roles.highest}) in order for me to ban that user`,
 			];
 		} else {
 			return [true, null];
 		}
+	}
 }

@@ -5,8 +5,9 @@ import { ModCase } from "../../entity/ModCase";
 import FuzzyClient from "../../lib/FuzzyClient";
 import { ModcaseRepo } from "../../repositories/ModcaseRepository";
 import BaseCommand from "../../structures/BaseCommand";
+import { usernameResolver } from "../../utils/resolvers";
 
-export default class PingCommand extends BaseCommand {
+export default class BanCommand extends BaseCommand {
 	constructor(client: FuzzyClient) {
 		super(client, {
 			name: "ban",
@@ -17,7 +18,7 @@ export default class PingCommand extends BaseCommand {
 				{
 					description: "Member you're wanting to ban!",
 					name: "member",
-					type: "USER",
+					type: "STRING",
 					required: true,
 				},
 				{
@@ -27,14 +28,10 @@ export default class PingCommand extends BaseCommand {
 					required: true,
 				},
 				{
-					name: "time",
-					description: "Duration on how long to ban",
-					type: "STRING",
-				},
-				{
 					name: "rules",
-					description: 'Rule Number(s) violated, make sure you seperate them with ",", 0 for none',
+					description: 'Rule Number(s) violated, make sure you seperate them with ",". 0 for none',
 					type: "STRING",
+					required: true,
 				},
 			],
 			cooldown: 0,
@@ -44,14 +41,13 @@ export default class PingCommand extends BaseCommand {
 	async run(interaction: CommandInteraction) {
 		if (!interaction.guild) return;
 		const member = interaction.guild.members.cache.get(interaction.user.id);
-		const violator = interaction.options.getMember("member", true);
+		const violator = await usernameResolver(this.client, interaction, interaction.options.getString("member", true));
 		const reason = interaction.options.getString("reason", true);
 		const rules = interaction.options.getString("rules", true);
 		if (violator instanceof GuildMember) {
-            
-			const success = await this.client.database
-				.getCustomRepository(ModcaseRepo)
-				.createBan(this.client, interaction, violator, reason, rules);
+			const [pass, err] = await this.client.utils.checkPosition(member!, violator);
+			if (!pass) throw new Error(err?.toString());
+			await this.client.database.getCustomRepository(ModcaseRepo).createBan(this.client, interaction, violator, reason, rules);
 			const embed = new MessageEmbed()
 				.setAuthor(violator.user.tag, violator.user.displayAvatarURL())
 				.setTitle(`You have been banned from ${interaction.guild.name}`)
@@ -60,9 +56,15 @@ export default class PingCommand extends BaseCommand {
 			if (!rules.split(" ").includes("0")) {
 				embed.addField("Rules Violated", rules);
 			}
-			violator
-				.send({ embeds: [embed] })
-				.catch(() => interaction.reply({ content: "Their ban message haven't been sent, possibly closed dms", ephemeral: true }));
+			try {
+				violator.send({ embeds: [embed] });
+			} catch (e) {
+				interaction.reply({ content: "Their ban message haven't been sent, possibly closed dms", ephemeral: true });
+			} finally {
+				violator.ban({ reason: reason }).then(() => {
+					interaction.reply({ content: `User has been banned off the server for ${reason}`, ephemeral: true });
+				});
+			}
 		}
 	}
 }

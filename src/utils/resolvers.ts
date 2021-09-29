@@ -1,4 +1,4 @@
-import { Channel, Emoji, Guild, GuildMember, Message, MessageEmbed, Role, Snowflake, TextChannel, User } from "discord.js";
+import { Channel, CommandInteraction, Emoji, Guild, GuildMember, Message, MessageEmbed, Role, Snowflake, TextChannel, User } from "discord.js";
 import _ from "lodash";
 import FuzzyClient from "../lib/FuzzyClient";
 import DiscordMenu from "./DiscordMenu";
@@ -156,19 +156,19 @@ export async function roleResolver(message: Message, mention: string): Promise<R
 	throw new Error(`Invalid role: ${mention} Remember, the bot can only resolve roles from the same guild.`);
 }
 
-export async function usernameResolver(client: FuzzyClient, message: Message, username: string): Promise<User> {
+export async function usernameResolver(client: FuzzyClient, interaction: CommandInteraction, username: string): Promise<User> {
 	if (!username) throw new Error("Username was not provided");
 	const regExpEsc = (str: string) => str.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&");
 
-	if (!message.guild) {
+	if (!interaction.guild) {
 		return userResolver(client, username);
 	}
-	const resUser = await resolveUser(username, message.guild);
+	const resUser = await resolveUser(username, interaction.guild);
 	if (resUser) return resUser;
 
 	const results = [];
 	const reg = new RegExp(regExpEsc(username), "i");
-	for (const member of message.guild.members.cache.values()) {
+	for (const member of interaction.guild.members.cache.values()) {
 		if (reg.test(member.user.username)) {
 			results.push(member.user);
 		} else if (reg.test(member.nickname!)) {
@@ -216,17 +216,17 @@ export async function usernameResolver(client: FuzzyClient, message: Message, us
 				}
 
 				new DiscordMenu(
-					message.channel as TextChannel,
-					message.author.id,
+					interaction.channel as TextChannel,
+					interaction.user.id,
 					children2.map((group) => {
 						const groupEmbed = new MessageEmbed()
-							.setAuthor(`${message.author.tag}`, message.author.displayAvatarURL({ dynamic: true }))
+							.setAuthor(`${interaction.user.tag}`, interaction.user.displayAvatarURL({ dynamic: true }))
 							.setTitle(`Multiple users found!`)
 							.setDescription(
 								`Multiple users matched the name **${username}**. Use the menu to find which user you meant, and then type their name in a message.`
 							)
 							.setColor(require("./../../config.json").color)
-							.setFooter(`User ID: ${message.author.id}`)
+							.setFooter(`User ID: ${interaction.user.id}`)
 							.setTimestamp();
 						group.map((child: User) => {
 							groupEmbed.addField(child.username, `ID: ${child.id}`);
