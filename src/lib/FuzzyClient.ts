@@ -15,7 +15,7 @@ import Yiffy from "yiffy";
 import { Connection, createConnection } from "typeorm";
 import Utils from "../utils/Utils";
 import { ScheduleRepo } from "../repositories/SchduleRepository";
-import { addSchedule } from "../utils/schedules";
+import ScheduleManager from "../utils/SchedulingManager";
 
 export default class FuzzyClient extends Client {
 	commands: Collection<string, BaseCommand>;
@@ -24,6 +24,7 @@ export default class FuzzyClient extends Client {
 	furryAPI: Yiffy;
 	arrayOfSlashCommands: (ChatInputApplicationCommandData & BaseCommand)[];
 	scheduleRepo: ScheduleRepo;
+	scheduleManager: ScheduleManager
 	config: { color: ColorResolvable; guildID: string; ownerID: string; devLogsID: string };
 	utils: Utils;
 	database: Connection;
@@ -36,6 +37,7 @@ export default class FuzzyClient extends Client {
 		this.schedules = {};
 		this.arrayOfSlashCommands = [];
 		this.utils = new Utils();
+		this.scheduleManager = new ScheduleManager(this)
 	}
 
 	public async loadDatabase() {
@@ -104,7 +106,7 @@ export default class FuzzyClient extends Client {
 		console.debug("Setting Up Schedules");
 		const records = await this.scheduleRepo.getAll();
 		records.forEach(async (record) => {
-			await addSchedule(this, record)
+			await this.scheduleManager.addSchedule(record)
 				.then(() => {
 					console.debug("Loaded Schedule: " + record.uid);
 				})

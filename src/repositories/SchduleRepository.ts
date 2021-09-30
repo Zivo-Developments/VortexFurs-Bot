@@ -10,8 +10,8 @@ import { Schedule } from "../entity/Schedules";
 @EntityRepository(Schedule)
 export class ScheduleRepo extends Repository<Schedule> {
 	public async createSchedule(createData: DeepPartial<Schedule>) {
-		await this.save(this.create(createData));
-		return true;
+		const data = await this.save(this.create(createData));
+		return data;
 	}
 
 	public async getAll() {

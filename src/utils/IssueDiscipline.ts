@@ -9,7 +9,7 @@ import { GuildRepo } from "../repositories/GuildRepository";
 import { MemberRepo } from "../repositories/MemberRepository";
 import { ModcaseRepo } from "../repositories/ModcaseRepository";
 import { channelResolver } from "./resolvers";
-import { uuid } from 'uuidv4';
+import { uuid } from "uuidv4";
 
 // TODO(vulpo): Check Back and Add Schedule to work with Temporary Actions
 // TODO(vulpo): Restrictions
@@ -18,7 +18,6 @@ import { uuid } from 'uuidv4';
 // * REFERENCE: https://github.com/Dracy-Developments/Hozol/blob/master/src/helper/moderation/incidents.ts
 
 export class IssueDiscipline {
-	public type: "warning" | "discipline" | "antispam" | "task" | "kick" | "ban";
 	public rulesViolated: string[];
 	public reason: string;
 	public additionalInfo: string;
@@ -39,11 +38,18 @@ export class IssueDiscipline {
 	public modCaseRepo: ModcaseRepo;
 	public memberRepo: MemberRepo;
 	public readonly userEmbed: MessageEmbed;
-	constructor(public client: FuzzyClient, public guild: Guild, public issuer: User, public violator: User) {
+	constructor(
+		public client: FuzzyClient,
+		public guild: Guild,
+		public issuer: User,
+		public violator: User,
+		public type: "warning" | "discipline" | "antispam" | "task" | "kick" | "ban"
+	) {
 		this.client = client;
 		this.guild = guild;
 		this.issuer = issuer;
 		this.violator = violator;
+		this.type = type;
 		this.rulesViolated = [];
 		this.reason = `No reason was provided. Please contact ${guild.name} Staff Team!`;
 		this.additionalInfo = `No Additional Information provided`;
@@ -160,12 +166,9 @@ export class IssueDiscipline {
 		this.setMuteDuration(null);
 		this.setBanDuration(null);
 		this.userEmbed
-			.setTitle("You've been warned!")
-			.setDescription(
-				"Due to your recent actions, you've have been warned! Please review the information provided below, Future incidents will result in harsher punishments"
-			)
-			.addField("Warning", this.reason)
-			.addField("Rules Violated", this.rulesViolated.join(", "))
+			.setTitle(`You've been warned ${this.guild.name}!`)
+			.addField("Warning", this.reason, true)
+			.addField("Rules Violated", this.rulesViolated.join(", "), true)
 			.setFooter(
 				`🗒️ Case ID: ${this.case}\n❓ If you have any questions regarding about your warning please contact staff\n😊 Thank you for your understanding and cooperation.`
 			);
@@ -175,13 +178,10 @@ export class IssueDiscipline {
 		this.setMuteDuration(0);
 		this.setBanDuration(null);
 		this.userEmbed
-			.setTitle("You're required to complete task!")
-			.setDescription(
-				"Due to your recent actions, you've have been muted until you fulfils all of the tasks! Please review the information provided below!"
-			)
-			.addField("Tasks", `- ${this.tasks.join("\n-")}`)
-			.addField("Reason", this.reason)
-			.addField("Rules Violated", this.rulesViolated.join(", "))
+			.setTitle(`You're required to complete task for ${this.guild.name}!`)
+			.addField("Tasks", `- ${this.tasks.join("\n-")}`, true)
+			.addField("Reason", this.reason, true)
+			.addField("Rules Violated", this.rulesViolated.join(", "), true)
 			.setFooter(
 				`🗒️ Case ID: ${this.case}\n❓ If you have any questions regarding about your warning please contact staff\n😊 Thank you for your understanding and cooperation.`
 			);
@@ -189,45 +189,18 @@ export class IssueDiscipline {
 
 	public async banUser() {
 		this.setMuteDuration(0);
-		if (!this.banDuration) {
-			this.userEmbed
-				.setTitle("You've been banned Indefinitely!")
-				.setDescription(
-					"Due to your recent actions, you've have been banned from the server we hope you enjoyed your stay and wish you the best in your future endeavors.! Please review the information provided below!"
-				)
-				.addField("Reason", this.reason)
-				.addField("Rules Violated", this.rulesViolated.join(", "))
-				.setFooter(
-					`🗒️ Case ID: ${this.case}\n❓ If you have any questions regarding about your warning please contact staff\n😊 Thank you for your understanding and cooperation.`
-				);
-		} else {
-			this.userEmbed
-				.setTitle("You've been banned temporarily!")
-				.setDescription(
-					"Due to your recent actions, you've have been banned temporarily from the server to reflect, and improve your behavior. Please review the information provided below!"
-				)
-				.addField("Reason", this.reason)
-				.addField("You'll be unbanned on", moment().add(this.banDuration, "days").format("LLLL"))
-				.addField("Rules Violated", this.rulesViolated.join(", "))
-				.setFooter(
-					`🗒️ Case ID: ${this.case}\n❓ If you have any questions regarding about your warning please contact staff\n😊 Thank you for your understanding and cooperation.`
-				);
-		}
-	}
-
-	private async banEmbed() {
-		// Bans, If the Ban Duration is specified
-		if (this.banDuration !== null) {
-			// if the ban equals zero
-			if (this.banDuration === 0) {
-				this.userEmbed.addField("You have been indefinitely banned", "We hope you enjoyed your stay");
-			} else {
-				this.userEmbed.addField(
-					`You have been temporarily banned for ${this.banDuration} days`,
-					`Please use this time to reflect and improve your behavior`
-				);
-			}
-		}
+		this.userEmbed
+			.setTitle(`You've been banned from ${this.guild.name}!`)
+			.addField("Reason", this.reason, true)
+			.addField("Rules Violated", this.rulesViolated.join(", "), true)
+			.addField(
+				"Duration",
+				`${this.banDuration ? moment().add(this.banDuration, "days").format("LLLL") : "indefinitely"}`,
+				true
+			)
+			.setFooter(
+				`🗒️ Case ID: ${this.case}\n❓ If you have any questions regarding about your warning please contact staff\n😊 Thank you for your understanding and cooperation.`
+			);
 	}
 
 	public async muteUser() {
@@ -236,9 +209,6 @@ export class IssueDiscipline {
 			this.banDuration = null;
 			this.userEmbed
 				.setTitle("You've been muted indeinitely!")
-				.setDescription(
-					`Your behavior cannot be tolerated in our guild. An indefinite mute has been issued against you and can be lifted by staff. Please read the following information carefully!`
-				)
 				.addField("Reason", this.reason)
 				.addField("Rules Violated", this.rulesViolated.join(", "))
 				.setFooter(
@@ -248,9 +218,6 @@ export class IssueDiscipline {
 			this.banDuration = null;
 			this.userEmbed
 				.setTitle("You've been muted temporarily")
-				.setDescription(
-					`Your conduct has caused significant problems in the community. Please read the following information carefully.`
-				)
 				.addField("Reason", this.reason)
 				.addField("Rules Violated", this.rulesViolated.join(", "))
 				.setFooter(
@@ -260,8 +227,12 @@ export class IssueDiscipline {
 	}
 
 	public async kickUser() {
-		if (this.guild.members.cache.get(this.violator.id) && this.guild.members.cache.get(this.violator.id)!.kickable)
-			this.guild.members.cache.get(this.violator.id)!.kick();
+		this.userEmbed
+			.setTitle("You've been kicked from the server")
+			.addField("Reason", this.reason)
+			.setFooter(
+				`🗒️ Case ID: ${this.case}\n❓ If you have any questions regarding about your warning please contact staff\n😊 Thank you for your understanding and cooperation.`
+			);
 	}
 
 	public async finish() {
@@ -286,32 +257,39 @@ export class IssueDiscipline {
 				embeds: [this.userEmbed],
 			});
 		}
+		await this.violator.send({ embeds: [this.userEmbed] }).catch(() => console.log("Unable to send that user"));
 
-		if (this.banDuration !== null) {
-			await this.banEmbed();
-			await this.violator.send({ embeds: [this.userEmbed] }).catch(() => console.log("Unable to send that user"));
-			if (this.banDuration === 0) {
-				this.guild.members.ban(this.violator, {
-					days: 0,
-					reason: this.reason,
-				});
-			} else {
-				await this.banEmbed();
-				await this.violator
-					.send({ embeds: [this.userEmbed] })
-					.catch(() => console.log("Unable to send that user"));
-				this.guild.members.ban(this.violator, {
-					days: 0,
-					reason: this.reason,
-				});
-				// TODO: Work ON Scheduling and Schedule the Unban Task
+		if (this.type === "kick") {
+			if (
+				this.guild.members.cache.get(this.violator.id) &&
+				this.guild.members.cache.get(this.violator.id)!.kickable
+			)
+				this.guild.members.cache.get(this.violator.id)!.kick();
+		}
+
+		if (this.banDuration === 0) {
+			this.guild.members.ban(this.violator, {
+				days: 0,
+				reason: this.reason,
+			});
+			if (this.banDuration !== null) {
+				await this.client.scheduleRepo
+					.createSchedule({
+						uid: `d-${this.case}`,
+						task: "removeBan",
+						data: {
+							user: this.violator.id,
+							guild: this.guild.id,
+						},
+						nextRun: moment().add(this.banDuration, "days").toISOString(true),
+					})
+					.then(async (data) => {
+						await this.client.scheduleManager.addSchedule(data);
+					});
 			}
 		} else if (this.muteDuration !== null) {
 			const muteRole = this.guild.roles.cache.get(this.guildData?.muteRoleID!)!;
 			if (this.muteDuration === 0 && this.violator) {
-				await this.violator
-					.send({ embeds: [this.userEmbed] })
-					.catch(() => console.log("Unable to send that user"));
 				this.guild.members.cache
 					.get(this.violator.id)!
 					.roles.add(muteRole, `Muted was issued on this user by ${this.issuer.tag}`)
@@ -323,9 +301,6 @@ export class IssueDiscipline {
 					});
 			} else {
 				if (this.violator) {
-					await this.violator
-						.send({ embeds: [this.userEmbed] })
-						.catch(() => console.log("Unable to send that user"));
 					this.guild.members.cache
 						.get(this.violator.id)!
 						.roles.add(
@@ -339,13 +314,19 @@ export class IssueDiscipline {
 							);
 						});
 				}
-				// TODO: Schedule to the Unmute Task
-			}
-		} else {
-			if (this.type !== "kick") {
-				await this.violator
-					.send({ embeds: [this.userEmbed] })
-					.catch(() => console.log("Unable to send that user"));
+				await this.client.scheduleRepo
+					.createSchedule({
+						uid: `d-${this.case}`,
+						task: "removeMute",
+						data: {
+							user: this.violator.id,
+							guild: this.guild.id,
+						},
+						nextRun: moment().add(this.muteDuration, "minutes").toISOString(true),
+					})
+					.then(async (data) => {
+						await this.client.scheduleManager.addSchedule(data);
+					});
 			}
 		}
 
