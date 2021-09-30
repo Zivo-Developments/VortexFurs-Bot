@@ -9,6 +9,12 @@ import { MemberRepo } from "../repositories/MemberRepository";
 import { ModcaseRepo } from "../repositories/ModcaseRepository";
 import { channelResolver } from "./resolvers";
 
+// TODO(vulpo): Check Back and Add Schedule to work with Temporary Actions
+// TODO(vulpo): Restrictions
+// TODO(vulpo): Raid Score
+// TODO(vulpo): Continue to Improve this
+// * REFERENCE: https://github.com/Dracy-Developments/Hozol/blob/master/src/helper/moderation/incidents.ts
+
 export class IssueDiscipline {
 	public type: "warning" | "discipline" | "antispam" | "task" | "kick" | "ban";
 	public rulesViolated: string[];
