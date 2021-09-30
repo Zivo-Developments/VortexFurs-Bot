@@ -6,17 +6,17 @@ import { Fursona } from "./Fursona";
 export class Member {
     @PrimaryGeneratedColumn()
     _id: number
-    @Column()
-    userID: string
-    @Column()
-    guildID: string
-    @Column()
-    tokens: number
-    @Column()
-    muted: boolean
-    @Column()
-    xp: number
     @Column({ default: null })
+    userID: string
+    @Column({ default: null })
+    guildID: string
+    @Column({ default: null })
+    tokens: number
+    @Column({ default: null })
+    muted: boolean
+    @Column({ default: null })
+    xp: number
+    @Column({ default: false })
 	verified: boolean;
     @OneToMany(() => Fursona, sona => sona.owner)
     sonas: Fursona[]

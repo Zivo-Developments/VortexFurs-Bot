@@ -59,8 +59,9 @@ export default class PingCommand extends BaseCommand {
 		for(let rule in rules.split(",")) mod.addRules(rule)
 		await mod.setReason(reason);
 		await mod.setBanDuration(duration);
+		await mod.setMuteDuration(null)
 		if(!duration) mod.setBanDuration(0)
-		await mod.banUser();
+		await mod.setInfo();
 		await mod.finish().then(async (discipline) => {
 			const embed = new MessageEmbed()
 				.setTitle("Ban")

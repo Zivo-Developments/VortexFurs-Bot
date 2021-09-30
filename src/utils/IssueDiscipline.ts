@@ -43,7 +43,7 @@ export class IssueDiscipline {
 		public guild: Guild,
 		public issuer: User,
 		public violator: User,
-		public type: "warning" | "discipline" | "antispam" | "task" | "kick" | "ban"
+		public type: "warning" | "task" | "kick" | "ban" | "mute"
 	) {
 		this.client = client;
 		this.guild = guild;
@@ -71,10 +71,77 @@ export class IssueDiscipline {
 		this.modCaseRepo = this.client.database.getCustomRepository(ModcaseRepo);
 		this.memberRepo = this.client.database.getCustomRepository(MemberRepo);
 	}
-
-	public async setType(type: "warning" | "discipline" | "antispam" | "task" | "kick" | "ban") {
-		this.type = type;
-		return this;
+	
+	public async setInfo() {
+		switch (this.type) {
+			case "ban":
+				this.setMuteDuration(null);
+				this.userEmbed
+					.setTitle(`You've been banned from ${this.guild.name}!`)
+					.addField("Reason", this.reason, true)
+					.addField("Rules Violated", this.rulesViolated.join(", "), true)
+					.addField(
+						"Duration",
+						`${this.banDuration ? moment().add(this.banDuration, "days").format("LLLL") : "indefinitely"}`,
+						true
+					)
+					.setFooter(
+						`🗒️ Case ID: ${this.case}\n❓ If you have any questions regarding about your warning please contact staff\n😊 Thank you for your understanding and cooperation.`
+					);
+				break;
+			case "kick":
+				this.userEmbed
+					.setTitle("You've been kicked from the server")
+					.addField("Reason", this.reason)
+					.setFooter(
+						`🗒️ Case ID: ${this.case}\n❓ If you have any questions regarding about your warning please contact staff\n😊 Thank you for your understanding and cooperation.`
+					);
+				break;
+			case "mute":
+				if (!this.muteDuration) {
+					this.muteDuration = 0;
+					this.banDuration = null;
+					this.userEmbed
+						.setTitle("You've been muted indeinitely!")
+						.addField("Reason", this.reason)
+						.addField("Rules Violated", this.rulesViolated.join(", "))
+						.setFooter(
+							`🗒️ Case ID: ${this.case}\n❓ If you have any questions regarding about your warning please contact staff\n😊 Thank you for your understanding and cooperation.`
+						);
+				} else {
+					this.banDuration = null;
+					this.userEmbed
+						.setTitle("You've been muted temporarily")
+						.addField("Reason", this.reason)
+						.addField("Rules Violated", this.rulesViolated.join(", "))
+						.setFooter(
+							`🗒️ Case ID: ${this.case}\n❓ If you have any questions regarding about your warning please contact staff\n😊 Thank you for your understanding and cooperation.`
+						);
+				}
+			case "task":
+				this.setMuteDuration(0);
+				this.setBanDuration(null);
+				this.userEmbed
+					.setTitle(`You're required to complete task for ${this.guild.name}!`)
+					.addField("Tasks", `- ${this.tasks.join("\n-")}`, true)
+					.addField("Reason", this.reason, true)
+					.addField("Rules Violated", this.rulesViolated.join(", "), true)
+					.setFooter(
+						`🗒️ Case ID: ${this.case}\n❓ If you have any questions regarding about your warning please contact staff\n😊 Thank you for your understanding and cooperation.`
+					);
+				break;
+			case "warning":
+				this.setMuteDuration(null);
+				this.setBanDuration(null);
+				this.userEmbed
+					.setTitle(`You've been warned ${this.guild.name}!`)
+					.addField("Warning", this.reason, true)
+					.addField("Rules Violated", this.rulesViolated.join(", "), true)
+					.setFooter(
+						`🗒️ Case ID: ${this.case}\n❓ If you have any questions regarding about your warning please contact staff\n😊 Thank you for your understanding and cooperation.`
+					);
+				break;
+		}
 	}
 
 	public async addRules(ruleNumber: string) {
@@ -162,79 +229,6 @@ export class IssueDiscipline {
 			.setTimestamp();
 	}
 
-	public async warnUser() {
-		this.setMuteDuration(null);
-		this.setBanDuration(null);
-		this.userEmbed
-			.setTitle(`You've been warned ${this.guild.name}!`)
-			.addField("Warning", this.reason, true)
-			.addField("Rules Violated", this.rulesViolated.join(", "), true)
-			.setFooter(
-				`🗒️ Case ID: ${this.case}\n❓ If you have any questions regarding about your warning please contact staff\n😊 Thank you for your understanding and cooperation.`
-			);
-	}
-
-	public async assignTask() {
-		this.setMuteDuration(0);
-		this.setBanDuration(null);
-		this.userEmbed
-			.setTitle(`You're required to complete task for ${this.guild.name}!`)
-			.addField("Tasks", `- ${this.tasks.join("\n-")}`, true)
-			.addField("Reason", this.reason, true)
-			.addField("Rules Violated", this.rulesViolated.join(", "), true)
-			.setFooter(
-				`🗒️ Case ID: ${this.case}\n❓ If you have any questions regarding about your warning please contact staff\n😊 Thank you for your understanding and cooperation.`
-			);
-	}
-
-	public async banUser() {
-		this.setMuteDuration(0);
-		this.userEmbed
-			.setTitle(`You've been banned from ${this.guild.name}!`)
-			.addField("Reason", this.reason, true)
-			.addField("Rules Violated", this.rulesViolated.join(", "), true)
-			.addField(
-				"Duration",
-				`${this.banDuration ? moment().add(this.banDuration, "days").format("LLLL") : "indefinitely"}`,
-				true
-			)
-			.setFooter(
-				`🗒️ Case ID: ${this.case}\n❓ If you have any questions regarding about your warning please contact staff\n😊 Thank you for your understanding and cooperation.`
-			);
-	}
-
-	public async muteUser() {
-		if (!this.muteDuration) {
-			this.muteDuration = 0;
-			this.banDuration = null;
-			this.userEmbed
-				.setTitle("You've been muted indeinitely!")
-				.addField("Reason", this.reason)
-				.addField("Rules Violated", this.rulesViolated.join(", "))
-				.setFooter(
-					`🗒️ Case ID: ${this.case}\n❓ If you have any questions regarding about your warning please contact staff\n😊 Thank you for your understanding and cooperation.`
-				);
-		} else {
-			this.banDuration = null;
-			this.userEmbed
-				.setTitle("You've been muted temporarily")
-				.addField("Reason", this.reason)
-				.addField("Rules Violated", this.rulesViolated.join(", "))
-				.setFooter(
-					`🗒️ Case ID: ${this.case}\n❓ If you have any questions regarding about your warning please contact staff\n😊 Thank you for your understanding and cooperation.`
-				);
-		}
-	}
-
-	public async kickUser() {
-		this.userEmbed
-			.setTitle("You've been kicked from the server")
-			.addField("Reason", this.reason)
-			.setFooter(
-				`🗒️ Case ID: ${this.case}\n❓ If you have any questions regarding about your warning please contact staff\n😊 Thank you for your understanding and cooperation.`
-			);
-	}
-
 	public async finish() {
 		// TODO: Restriction Stuff
 		await this.modCaseRepo.Issue({
@@ -272,7 +266,8 @@ export class IssueDiscipline {
 				days: 0,
 				reason: this.reason,
 			});
-			if (this.banDuration !== null) {
+			if (this.banDuration !== null && this.banDuration > 0) {
+				console.log("E");
 				await this.client.scheduleRepo
 					.createSchedule({
 						uid: `d-${this.case}`,
@@ -287,7 +282,8 @@ export class IssueDiscipline {
 						await this.client.scheduleManager.addSchedule(data);
 					});
 			}
-		} else if (this.muteDuration !== null) {
+		} else if (this.muteDuration !== null && this.muteDuration > 0) {
+			console.log("F");
 			const muteRole = this.guild.roles.cache.get(this.guildData?.muteRoleID!)!;
 			if (this.muteDuration === 0 && this.violator) {
 				this.guild.members.cache
@@ -301,6 +297,8 @@ export class IssueDiscipline {
 					});
 			} else {
 				if (this.violator) {
+					console.log("G");
+
 					this.guild.members.cache
 						.get(this.violator.id)!
 						.roles.add(

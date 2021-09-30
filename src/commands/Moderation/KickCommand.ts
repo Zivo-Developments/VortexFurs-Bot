@@ -45,7 +45,7 @@ export default class PingCommand extends BaseCommand {
 		const mod = new IssueDiscipline(this.client, interaction.guild, interaction.user, user, "kick");
 		await mod.setReason(reason);
 		await mod.addRules("0");
-		await mod.kickUser();
+		await mod.setInfo();
 		await mod.finish().then(async (discipline) => {
 			const embed = new MessageEmbed()
 				.setTitle("Kick")
