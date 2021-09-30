@@ -1,5 +1,16 @@
-import { Message, PermissionFlags, MessageEmbed, Channel, TextChannel, AwaitMessagesOptions, TextBasedChannels, GuildMember, CommandInteraction } from "discord.js";
+import {
+	Message,
+	PermissionFlags,
+	MessageEmbed,
+	Channel,
+	TextChannel,
+	AwaitMessagesOptions,
+	TextBasedChannels,
+	GuildMember,
+	CommandInteraction,
+} from "discord.js";
 import hastebin from "hastebin-gen";
+import random from "crypto-random-string";
 
 export default class Utils {
 	/**
@@ -50,5 +61,10 @@ export default class Utils {
 		} else {
 			return [true, "User has permissions"];
 		}
+	}
+
+	public uid(): string {
+		const intial = Date.now().toString(16);
+		return `${intial}${random({ length: 16 - intial.length })}`;
 	}
 }

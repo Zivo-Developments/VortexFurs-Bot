@@ -441,6 +441,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"crypto-random-string@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "crypto-random-string@npm:4.0.0"
+  dependencies:
+    type-fest: ^1.0.1
+  checksum: 91f148f27bcc8582798f0fb3e75a09d9174557f39c3c40a89dd1bd70fb5a14a02548245aa26fa7d663c426ac5026f4729841231c84f9e30e8c8ece5e38656741
+  languageName: node
+  linkType: hard
+
 "cssbeautify@npm:^0.3.1":
   version: 0.3.1
   resolution: "cssbeautify@npm:0.3.1"
@@ -614,6 +623,7 @@ __metadata:
     "@types/ms": ^0.7.31
     "@types/uuid": ^8.3.1
     beautify: ^0.0.8
+    crypto-random-string: ^4.0.0
     discord-api-types: ^0.23.1
     discord.js: ^13.1.0
     dotenv: ^10.0.0
@@ -1358,7 +1368,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"type-fest@npm:^1.2.1":
+"type-fest@npm:^1.0.1, type-fest@npm:^1.2.1":
   version: 1.4.0
   resolution: "type-fest@npm:1.4.0"
   checksum: b011c3388665b097ae6a109a437a04d6f61d81b7357f74cbcb02246f2f5bd72b888ae33631b99871388122ba0a87f4ff1c94078e7119ff22c70e52c0ff828201

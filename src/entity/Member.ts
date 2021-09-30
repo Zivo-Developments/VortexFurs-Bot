@@ -9,7 +9,11 @@ export class Member {
     @Column()
     userID: string
     @Column()
+    guildID: string
+    @Column()
     tokens: number
+    @Column()
+    muted: boolean
     @Column()
     xp: number
     @Column({ default: null })
