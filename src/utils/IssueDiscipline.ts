@@ -1,4 +1,5 @@
-import { GuildMember, MessageEmbed, Guild } from "discord.js";
+import { GuildMember, MessageEmbed, Guild, User } from "discord.js";
+import { uniqueId } from "lodash";
 import moment from "moment";
 import { Guild as GuildEntity } from "../entity/Guild";
 import { Member } from "../entity/Member";
@@ -8,6 +9,7 @@ import { GuildRepo } from "../repositories/GuildRepository";
 import { MemberRepo } from "../repositories/MemberRepository";
 import { ModcaseRepo } from "../repositories/ModcaseRepository";
 import { channelResolver } from "./resolvers";
+import { uuid } from 'uuidv4';
 
 // TODO(vulpo): Check Back and Add Schedule to work with Temporary Actions
 // TODO(vulpo): Restrictions
@@ -37,12 +39,7 @@ export class IssueDiscipline {
 	public modCaseRepo: ModcaseRepo;
 	public memberRepo: MemberRepo;
 	public readonly userEmbed: MessageEmbed;
-	constructor(
-		public client: FuzzyClient,
-		public guild: Guild,
-		public issuer: GuildMember,
-		public violator: GuildMember
-	) {
+	constructor(public client: FuzzyClient, public guild: Guild, public issuer: User, public violator: User) {
 		this.client = client;
 		this.guild = guild;
 		this.issuer = issuer;
@@ -61,7 +58,7 @@ export class IssueDiscipline {
 		this.muteDuration = null;
 		this.banDuration = null;
 		this.tasks = [];
-		this.case = this.client.utils.uid();
+		this.case = uuid();
 		this.userEmbed = new MessageEmbed();
 		this.getSettings();
 		this.setBaseEmbed();
@@ -154,7 +151,7 @@ export class IssueDiscipline {
 
 	private async setBaseEmbed() {
 		this.userEmbed
-			.setAuthor(`Issued by: ${this.issuer.user.tag}`, `${this.issuer.user.displayAvatarURL({ dynamic: true })}`)
+			.setAuthor(`Issued by: ${this.issuer.tag}`, `${this.issuer.displayAvatarURL({ dynamic: true })}`)
 			.setColor(color(this.type))
 			.setTimestamp();
 	}
@@ -263,7 +260,8 @@ export class IssueDiscipline {
 	}
 
 	public async kickUser() {
-		if (this.violator && this.violator.kickable) this.violator.kick();
+		if (this.guild.members.cache.get(this.violator.id) && this.guild.members.cache.get(this.violator.id)!.kickable)
+			this.guild.members.cache.get(this.violator.id)!.kick();
 	}
 
 	public async finish() {
@@ -280,6 +278,14 @@ export class IssueDiscipline {
 			actionsTaken: [],
 			violator: this.memberData,
 		});
+
+		const modLogChannel = await channelResolver(this.client, this.guildData?.modLogChannelID!)!;
+		if (modLogChannel && modLogChannel?.isText()) {
+			modLogChannel.send({
+				content: `:warning: Discipline was issued against ${this.violator.tag} (${this.violator.id}). Read more information below.`,
+				embeds: [this.userEmbed],
+			});
+		}
 
 		if (this.banDuration !== null) {
 			await this.banEmbed();
@@ -306,8 +312,9 @@ export class IssueDiscipline {
 				await this.violator
 					.send({ embeds: [this.userEmbed] })
 					.catch(() => console.log("Unable to send that user"));
-				this.violator.roles
-					.add(muteRole, `Muted was issued on this user by ${this.issuer.user.tag}`)
+				this.guild.members.cache
+					.get(this.violator.id)!
+					.roles.add(muteRole, `Muted was issued on this user by ${this.issuer.tag}`)
 					.then(async () => {
 						await this.memberRepo.update(
 							{ guildID: this.guild.id, userID: this.violator.id },
@@ -319,10 +326,11 @@ export class IssueDiscipline {
 					await this.violator
 						.send({ embeds: [this.userEmbed] })
 						.catch(() => console.log("Unable to send that user"));
-					this.violator.roles
-						.add(
+					this.guild.members.cache
+						.get(this.violator.id)!
+						.roles.add(
 							muteRole,
-							`Muted was issued on this user by ${this.issuer.user.tag}. The mute will be cleared in ${this.muteDuration} minutes`
+							`Muted was issued on this user by ${this.issuer.tag}. The mute will be cleared in ${this.muteDuration} minutes`
 						)
 						.then(async () => {
 							await this.memberRepo.update(
@@ -341,23 +349,13 @@ export class IssueDiscipline {
 			}
 		}
 
-		if (this.type === "kick") {
-			const modLogChannel = await channelResolver(this.client, this.guildData?.modLogChannelID!)!;
-			if (modLogChannel && modLogChannel?.isText()) {
-				modLogChannel.send({
-					content: `:warning: Discipline was issued against ${this.violator.user.tag} (${this.violator.user.id}). They have been kicked.`,
-					embeds: [this.userEmbed],
-				});
-			}
-		}
-
 		return this;
 	}
 
 	public async toJSON() {
 		return {
-			issuerID: this.issuer.user.id,
-			violatorID: this.violator.user.id,
+			issuerID: this.issuer.id,
+			violatorID: this.violator.id,
 			rulesViolated: this.rulesViolated.join(", "),
 			reason: this.reason,
 			additionalInfo: this.additionalInfo,

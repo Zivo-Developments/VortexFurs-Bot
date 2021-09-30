@@ -14,14 +14,18 @@ import BaseCommand from "../structures/BaseCommand";
 import Yiffy from "yiffy";
 import { Connection, createConnection } from "typeorm";
 import Utils from "../utils/Utils";
+import { ScheduleRepo } from "../repositories/SchduleRepository";
+import { addSchedule } from "../utils/schedules";
 
 export default class FuzzyClient extends Client {
 	commands: Collection<string, BaseCommand>;
 	aliases: Collection<string, string>;
+	schedules: any;
 	furryAPI: Yiffy;
 	arrayOfSlashCommands: (ChatInputApplicationCommandData & BaseCommand)[];
-	config: { color: ColorResolvable; guildID: string; ownerID: string, devLogsID: string };
-	utils: Utils
+	scheduleRepo: ScheduleRepo;
+	config: { color: ColorResolvable; guildID: string; ownerID: string; devLogsID: string };
+	utils: Utils;
 	database: Connection;
 	constructor(opts: ClientOptions) {
 		super(opts);
@@ -29,8 +33,9 @@ export default class FuzzyClient extends Client {
 		this.commands = new Collection();
 		this.aliases = new Collection();
 		this.furryAPI = new Yiffy();
+		this.schedules = {};
 		this.arrayOfSlashCommands = [];
-		this.utils = new Utils()
+		this.utils = new Utils();
 	}
 
 	public async loadDatabase() {
@@ -49,6 +54,7 @@ export default class FuzzyClient extends Client {
 			console.log(`Unable to load database! ${e}`);
 			return process.exit();
 		});
+		this.scheduleRepo = this.database.getCustomRepository(ScheduleRepo);
 	}
 
 	public async loadCommands() {
@@ -56,7 +62,7 @@ export default class FuzzyClient extends Client {
 		fs.readdirSync("dist/commands/").forEach((category) => {
 			console.log(`Loading (/) Category: ${category}`);
 			fs.readdirSync(`dist/commands/${category}`).forEach((command) => {
-				console.log(`Loading (/) Command: ${command}`)
+				console.log(`Loading (/) Command: ${command}`);
 				const file: BaseCommand = new (require(`../commands/${category}/${command}`).default)(this);
 				if (!file || !file.name) return;
 				this.commands.set(file.name, file);
@@ -91,6 +97,18 @@ export default class FuzzyClient extends Client {
 			} catch (e) {
 				console.error(`Error Loading ${evt.split(".")[0]} ${e}`);
 			}
+		});
+	}
+
+	public async loadSchedules() {
+		console.debug("Setting Up Schedules");
+		const records = await this.scheduleRepo.getAll();
+		records.forEach(async (record) => {
+			await addSchedule(this, record)
+				.then(() => {
+					console.debug("Loaded Schedule: " + record.uid);
+				})
+				.catch((e) => console.error("Problem Loading Schedule: " + record.uid + "Error:\n" + e));
 		});
 	}
 }

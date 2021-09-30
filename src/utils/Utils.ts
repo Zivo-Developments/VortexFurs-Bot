@@ -1,3 +1,4 @@
+import crypto from "crypto";
 import {
 	Message,
 	PermissionFlags,
@@ -10,7 +11,7 @@ import {
 	CommandInteraction,
 } from "discord.js";
 import hastebin from "hastebin-gen";
-import random from "crypto-random-string";
+import { uniqueId } from "lodash";
 
 export default class Utils {
 	/**
@@ -61,10 +62,5 @@ export default class Utils {
 		} else {
 			return [true, "User has permissions"];
 		}
-	}
-
-	public uid(): string {
-		const intial = Date.now().toString(16);
-		return `${intial}${random({ length: 16 - intial.length })}`;
 	}
 }
