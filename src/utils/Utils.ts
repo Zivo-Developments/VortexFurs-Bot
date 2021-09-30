@@ -33,7 +33,7 @@ export default class Utils {
 		throw new Error("There was a problem waiting for your message, please try again!");
 	}
 
-	public async checkPosition(member: GuildMember, violator: GuildMember) {
+	public async checkPosition(member: GuildMember, violator: GuildMember): Promise<[boolean, string]> {
 		const botPosition = member.guild?.me?.roles.highest.position;
 		const userPosition = violator.roles.highest.position;
 		const modPosition = member.roles.highest.position;
@@ -48,7 +48,7 @@ export default class Utils {
 				`Your highest role (${member?.roles.highest}) must be higher than the user's highest role (${violator.roles.highest}) in order for me to ban that user`,
 			];
 		} else {
-			return [true, null];
+			return [true, "User has permissions"];
 		}
 	}
 }

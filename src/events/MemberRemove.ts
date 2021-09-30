@@ -36,7 +36,7 @@ export default class MemberCreateEvent extends BaseEvent {
 					.setColor("RED")
 					.setTitle("A Member Left the Guild!")
 					.setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
-					.addField(`Time Spent in the Guild`, `<t:${Math.floor(member.joinedAt?.getTime()! / 1000)}:R>`)
+					.addField(`Time Spent in the Guild`, `${moment.duration(moment().diff(moment(member.joinedAt)), "milliseconds").humanize()}`)
 					.addField(`Roles`, member.roles.cache.map((role) => role).join(", "))
 					.setTimestamp()
 					.setFooter(`User ID: ${member.user.id}`);

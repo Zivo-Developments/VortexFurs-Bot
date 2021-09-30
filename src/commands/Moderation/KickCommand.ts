@@ -7,13 +7,13 @@ import { ModcaseRepo } from "../../repositories/ModcaseRepository";
 import BaseCommand from "../../structures/BaseCommand";
 import { usernameResolver } from "../../utils/resolvers";
 
-export default class BanCommand extends BaseCommand {
+export default class KickCommand extends BaseCommand {
 	constructor(client: FuzzyClient) {
 		super(client, {
-			name: "ban",
+			name: "kick",
 			botPermissions: [],
-			shortDescription: "Ban a member!",
-			userPermissions: ["BAN_MEMBERS"],
+			shortDescription: "Kick a member!",
+			userPermissions: ["KICK_MEMBERS"],
 			args: [
 				{
 					description: "Member you're wanting to ban! (Username, Mention, User ID)",
@@ -27,15 +27,9 @@ export default class BanCommand extends BaseCommand {
 					type: "STRING",
 					required: true,
 				},
-				{
-					name: "rules",
-					description: 'Rule Number(s) violated, make sure you seperate them with ",". 0 for none',
-					type: "STRING",
-					required: true,
-				},
 			],
 			cooldown: 0,
-			extendedDescription: "Ban a member off the guild",
+			extendedDescription: "Kick a member off the guild",
 		});
 	}
 	async run(interaction: CommandInteraction) {
@@ -45,26 +39,22 @@ export default class BanCommand extends BaseCommand {
 			(await usernameResolver(this.client, interaction, interaction.options.getString("member", true))).id
 		);
 		const reason = interaction.options.getString("reason", true);
-		const rules = interaction.options.getString("rules", true);
 		if (violator) {
 			const [pass, err] = await this.client.utils.checkPosition(member!, violator);
 			if (!pass) throw new Error(err);
-			await this.client.database.getCustomRepository(ModcaseRepo).createBan(this.client, interaction, violator, reason, rules);
+			await this.client.database.getCustomRepository(ModcaseRepo).createKick(this.client, interaction, violator, reason);
 			const embed = new MessageEmbed()
 				.setAuthor(violator.user.tag, violator.user.displayAvatarURL())
-				.setTitle(`You have been banned from ${interaction.guild.name}`)
-				.setColor("RED")
+				.setTitle(`You have been kicked from ${interaction.guild.name}`)
+				.setColor("YELLOW")
 				.addField("Reason", reason);
-			if (!rules.split(" ").includes("0")) {
-				embed.addField("Rules Violated", rules);
-			}
 			try {
 				violator.send({ embeds: [embed] });
 			} catch (e) {
 				interaction.reply({ content: "Their ban message haven't been sent, possibly closed dms", ephemeral: true });
 			} finally {
-				violator.ban({ reason: reason }).then(() => {
-					interaction.reply({ content: `User has been banned off the server for ${reason}`, ephemeral: true });
+				violator.kick(reason).then(() => {
+					interaction.reply({ content: `User has been Kicked off the server for ${reason}`, ephemeral: true });
 				});
 			}
 		}
