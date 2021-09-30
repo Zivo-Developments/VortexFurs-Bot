@@ -5,11 +5,16 @@ import { Member } from "../entity/Member";
 import { ModCase } from "../entity/ModCase";
 import { CommandInteraction, GuildMember } from "discord.js";
 import { MemberRepo } from "./MemberRepository";
+import { Schedule } from "../entity/Schedules";
 
-@EntityRepository(ModCase)
-export class ModcaseRepo extends Repository<ModCase> {
-	public async Issue(createData: DeepPartial<ModCase>) {
-		await this.save(this.create(createData));
-		return true;
+@EntityRepository(Schedule)
+export class ScheduleRepo extends Repository<Schedule> {
+	public async createSchedule(createData: DeepPartial<Schedule>) {
+		const data = await this.save(this.create(createData));
+		return data;
+	}
+
+	public async getAll() {
+		return await this.find({});
 	}
 }

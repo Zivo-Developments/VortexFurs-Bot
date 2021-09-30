@@ -58,6 +58,7 @@ export default class ReadyEvent extends BaseEvent {
 			try {
 				await cmd.run(interaction);
 			} catch (e) {
+				console.log(e)
 				const embed = new MessageEmbed()
 					.setAuthor(interaction.user.tag, interaction.user.displayAvatarURL({ dynamic: true }))
 					.setColor("RED")
@@ -142,6 +143,7 @@ export default class ReadyEvent extends BaseEvent {
 									description: "This is used to log any verification actions",
 								},
 								{ label: "Event Log Channel", value: "eventLogChannel", description: "This is used to log any bot events" },
+								{ label: "Mod Log Channel", value: "modLogChannelID", description: "Place where all moderation actions goes" }
 							],
 						})
 					);

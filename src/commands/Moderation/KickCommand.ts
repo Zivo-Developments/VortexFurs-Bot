@@ -1,62 +1,61 @@
 import { CommandInteraction, GuildMember, MessageEmbed } from "discord.js";
-import { duration } from "moment";
-import ms from "ms";
-import { ModCase } from "../../entity/ModCase";
 import FuzzyClient from "../../lib/FuzzyClient";
-import { ModcaseRepo } from "../../repositories/ModcaseRepository";
 import BaseCommand from "../../structures/BaseCommand";
+import { IssueDiscipline } from "../../utils/IssueDiscipline";
 import { usernameResolver } from "../../utils/resolvers";
 
-export default class KickCommand extends BaseCommand {
+export default class PingCommand extends BaseCommand {
 	constructor(client: FuzzyClient) {
 		super(client, {
 			name: "kick",
-			botPermissions: [],
-			shortDescription: "Kick a member!",
+			botPermissions: ["KICK_MEMBERS"],
+			shortDescription: "Kicks a member!",
 			userPermissions: ["KICK_MEMBERS"],
 			args: [
 				{
-					description: "Member you're wanting to kick! (Username, Mention, User ID)",
 					name: "member",
+					description: "Member to ban (User ID, Mention, or Name/Nick)",
 					type: "STRING",
 					required: true,
 				},
 				{
 					name: "reason",
-					description: "Reason why are you kicking this member",
+					description: "Reason for the ban",
 					type: "STRING",
 					required: true,
 				},
 			],
 			cooldown: 0,
-			extendedDescription: "Kick a member off the guild",
+			extendedDescription: "Kicks the member from the server",
 		});
 	}
 	async run(interaction: CommandInteraction) {
 		if (!interaction.guild) return;
-		const member = interaction.guild.members.cache.get(interaction.user.id);
-		const violator = interaction.guild.members.cache.get(
-			(await usernameResolver(this.client, interaction, interaction.options.getString("member", true))).id
-		);
+		const target = interaction.options.getString("member", true);
 		const reason = interaction.options.getString("reason", true);
-		if (violator) {
-			const [pass, err] = await this.client.utils.checkPosition(member!, violator);
-			if (!pass) throw new Error(err);
-			await this.client.database.getCustomRepository(ModcaseRepo).createKick(this.client, interaction, violator, reason);
+		const user = await usernameResolver(this.client, interaction, target);
+		if (user === interaction.user) throw new Error("You cannot kick yourself");
+		const member = interaction.guild?.members.cache.get(user.id);
+		if (!member) throw new Error("You can only kick members that are in the guild");
+		const [passed, failedMessage] = await this.client.utils.checkPosition(
+			interaction.member as GuildMember,
+			member
+		);
+		if (!passed) throw new Error(failedMessage as string);
+		const mod = new IssueDiscipline(this.client, interaction.guild, interaction.user, user, "kick");
+		await mod.setReason(reason);
+		await mod.addRules("0");
+		await mod.setInfo();
+		await mod.finish().then(async (discipline) => {
 			const embed = new MessageEmbed()
-				.setAuthor(violator.user.tag, violator.user.displayAvatarURL())
-				.setTitle(`You have been kicked from ${interaction.guild.name}`)
-				.setColor("YELLOW")
-				.addField("Reason", reason);
-			try {
-				violator.send({ embeds: [embed] });
-			} catch (e) {
-				interaction.reply({ content: "Their kick message haven't been sent, possibly closed dms", ephemeral: true });
-			} finally {
-				violator.kick(reason).then(() => {
-					interaction.reply({ content: `User has been Kicked off the server for ${reason}`, ephemeral: true });
-				});
-			}
-		}
+				.setTitle("Kick")
+				.setAuthor(`Issued By: ${discipline.issuer.tag}`, discipline.issuer.displayAvatarURL({ dynamic: true }))
+				.addField("Violator", `${discipline.violator.username}(${discipline.violator.id})`)
+				.addField("Reason:", discipline.reason)
+				.setTimestamp()
+				.setFooter(`Issuer ID: ${discipline.issuer.id}`)
+				.setColor("RED");
+			await interaction.reply({ embeds: [embed] });
+		});
 	}
 }

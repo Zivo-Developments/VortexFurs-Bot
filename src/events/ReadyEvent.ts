@@ -8,6 +8,7 @@ import { Client } from "../entity/Client";
 import { Guild } from "../entity/Guild";
 import FuzzyClient from "../lib/FuzzyClient";
 import { GuildRepo } from "../repositories/GuildRepository";
+import { MemberRepo } from "../repositories/MemberRepository";
 import BaseEvent from "../structures/BaseEvent";
 
 export default class ReadyEvent extends BaseEvent {
@@ -22,6 +23,15 @@ export default class ReadyEvent extends BaseEvent {
 			console.error("Cannot find the guild!");
 			process.exit();
 		}
+		const memberRepo = client.database.getCustomRepository(MemberRepo);
+
+		guild.members.cache.each((member) =>
+			memberRepo.findOrCreate(
+				{ userID: member.id, guildID: guild.id },
+				{ guildID: guild.id, userID: member.user.id }
+			)
+		);
+
 		const fullPerms: GuildApplicationCommandPermissionData[] = [];
 		const guildRepo = client.database.getCustomRepository(GuildRepo);
 		const guildData = guildRepo.findOrCreate({ guildID: guild.id }, { guildID: guild.id });

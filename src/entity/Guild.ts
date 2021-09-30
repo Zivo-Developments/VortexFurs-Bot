@@ -42,10 +42,14 @@ export class Guild {
 	welcomeRoleID: string;
 	@Column({ default: null })
 	generalChannel: string;
+	@Column({ default: null })
+	modLogChannelID: string;
 	@Column("text", { default: null })
 	welcomeMessage: string;
 	@Column({ default: null })
 	staffRoleID: string;
+	@Column({ default: null })
+	muteRoleID: string;
 	@Column({ default: null })
 	pendingVerficiatonChannelID: string;
 	@Column({ default: null })

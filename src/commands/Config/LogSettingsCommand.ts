@@ -155,6 +155,13 @@ export default class LogSettingsCommand extends BaseSlashCommand {
 						}`,
 						inline: true,
 					},
+					{
+						name: "modLogChannelID",
+						value: `${
+							guildData!["modLogChannelID"] ? interaction.guild?.channels.cache.get(guildData!["modLogChannelID"]) : "Not Set"
+						}`,
+						inline: true,
+					},
 				])
 				.setColor(this.client.config.color)
 				.setFooter(`User ID: ${interaction.user.id}`);

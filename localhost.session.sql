@@ -1,1 +1,1 @@
-select * from fursona;
+select * from member;

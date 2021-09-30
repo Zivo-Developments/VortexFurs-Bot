@@ -1,5 +1,17 @@
-import { Message, PermissionFlags, MessageEmbed, Channel, TextChannel, AwaitMessagesOptions, TextBasedChannels, GuildMember, CommandInteraction } from "discord.js";
+import crypto from "crypto";
+import {
+	Message,
+	PermissionFlags,
+	MessageEmbed,
+	Channel,
+	TextChannel,
+	AwaitMessagesOptions,
+	TextBasedChannels,
+	GuildMember,
+	CommandInteraction,
+} from "discord.js";
 import hastebin from "hastebin-gen";
+import { uniqueId } from "lodash";
 
 export default class Utils {
 	/**
