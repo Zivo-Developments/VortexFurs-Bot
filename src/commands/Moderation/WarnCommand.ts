@@ -10,26 +10,26 @@ import { usernameResolver } from "../../utils/resolvers";
 export default class KickCommand extends BaseCommand {
 	constructor(client: FuzzyClient) {
 		super(client, {
-			name: "kick",
+			name: "warn",
 			botPermissions: [],
-			shortDescription: "Kick a member!",
-			userPermissions: ["KICK_MEMBERS"],
+			shortDescription: "Warn a member!",
+			userPermissions: ["MANAGE_MESSAGES"],
 			args: [
 				{
-					description: "Member you're wanting to kick! (Username, Mention, User ID)",
+					description: "Member you're wanting to warn! (Username, Mention, User ID)",
 					name: "member",
 					type: "STRING",
 					required: true,
 				},
 				{
 					name: "reason",
-					description: "Reason why are you kicking this member",
+					description: "Reason why are you warning this member",
 					type: "STRING",
 					required: true,
 				},
 			],
 			cooldown: 0,
-			extendedDescription: "Kick a member off the guild",
+			extendedDescription: "Warn a member in the guild",
 		});
 	}
 	async run(interaction: CommandInteraction) {
@@ -45,17 +45,15 @@ export default class KickCommand extends BaseCommand {
 			await this.client.database.getCustomRepository(ModcaseRepo).createKick(this.client, interaction, violator, reason);
 			const embed = new MessageEmbed()
 				.setAuthor(violator.user.tag, violator.user.displayAvatarURL())
-				.setTitle(`You have been kicked from ${interaction.guild.name}`)
+				.setTitle(`You have received a warning from ${interaction.guild.name}`)
 				.setColor("YELLOW")
-				.addField("Reason", reason);
+				.addField("Warning", reason);
 			try {
 				violator.send({ embeds: [embed] });
 			} catch (e) {
-				interaction.reply({ content: "Their kick message haven't been sent, possibly closed dms", ephemeral: true });
+				interaction.reply({ content: "Their warning haven't been sent, possibly closed dms", ephemeral: true });
 			} finally {
-				violator.kick(reason).then(() => {
-					interaction.reply({ content: `User has been Kicked off the server for ${reason}`, ephemeral: true });
-				});
+				interaction.reply({ content: `User has been warned for ${reason}`, ephemeral: true });
 			}
 		}
 	}
