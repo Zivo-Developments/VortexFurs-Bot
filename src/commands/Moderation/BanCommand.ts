@@ -52,15 +52,18 @@ export default class PingCommand extends BaseCommand {
 		if (banned) throw new Error("The User is already banned!");
 		const member = interaction.guild?.members.cache.get(user.id);
 		if (member) {
-			const [passed, failedMessage] = await this.client.utils.checkPosition(interaction.member as GuildMember, member);
+			const [passed, failedMessage] = await this.client.utils.checkPosition(
+				interaction.member as GuildMember,
+				member
+			);
 			if (!passed) throw new Error(failedMessage as string);
 		}
 		const mod = new IssueDiscipline(this.client, interaction.guild, interaction.user, user, "ban");
-		for(let rule in rules.split(",")) mod.addRules(rule)
+		for (let rule in rules.split(",")) mod.addRules(rule);
 		await mod.setReason(reason);
 		await mod.setBanDuration(duration);
-		await mod.setMuteDuration(null)
-		if(!duration) mod.setBanDuration(0)
+		await mod.setMuteDuration(null);
+		if (!duration) mod.setBanDuration(0);
 		await mod.setInfo();
 		await mod.finish().then(async (discipline) => {
 			const embed = new MessageEmbed()

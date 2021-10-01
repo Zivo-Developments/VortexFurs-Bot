@@ -1,4 +1,4 @@
-import { Message, ConstantsEvents, Client, ClientEvents } from "discord.js";
+import { ClientEvents } from "discord.js";
 import FuzzyClient from "../lib/FuzzyClient";
 
 export default abstract class BaseEvent {

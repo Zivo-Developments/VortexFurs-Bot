@@ -1,4 +1,4 @@
-import { Interaction, Message, MessageActionRow, MessageEmbed, MessageSelectMenu, TextChannel } from "discord.js";
+import { Interaction, MessageActionRow, MessageEmbed, MessageSelectMenu, TextChannel } from "discord.js";
 import FuzzyClient from "../lib/FuzzyClient";
 import { GuildRepo } from "../repositories/GuildRepository";
 import BaseEvent from "../structures/BaseEvent";

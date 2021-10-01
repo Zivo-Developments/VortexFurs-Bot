@@ -1,21 +1,18 @@
 import {
-	ApplicationCommand,
-	ApplicationCommandData,
 	ApplicationCommandOptionData,
 	ChatInputApplicationCommandData,
 	Client,
 	ClientOptions,
 	Collection,
-	ColorResolvable,
+	ColorResolvable
 } from "discord.js";
 import fs from "fs";
-import { NamespaceExport } from "typescript";
-import BaseCommand from "../structures/BaseCommand";
-import Yiffy from "yiffy";
 import { Connection, createConnection } from "typeorm";
-import Utils from "../utils/Utils";
+import Yiffy from "yiffy";
 import { ScheduleRepo } from "../repositories/SchduleRepository";
+import BaseCommand from "../structures/BaseCommand";
 import ScheduleManager from "../utils/SchedulingManager";
+import Utils from "../utils/Utils";
 
 export default class FuzzyClient extends Client {
 	commands: Collection<string, BaseCommand>;

@@ -1,6 +1,5 @@
-import { Guild } from "../entity/Guild";
 import { DeepPartial, EntityRepository, FindConditions, Repository } from "typeorm";
-import FuzzyClient from "../lib/FuzzyClient";
+import { Guild } from "../entity/Guild";
 
 @EntityRepository(Guild)
 export class GuildRepo extends Repository<Guild> {

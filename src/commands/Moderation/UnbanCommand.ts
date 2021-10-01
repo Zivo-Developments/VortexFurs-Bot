@@ -1,8 +1,7 @@
-import { CommandInteraction, GuildMember, MessageEmbed } from "discord.js";
+import { CommandInteraction, MessageEmbed } from "discord.js";
 import FuzzyClient from "../../lib/FuzzyClient";
 import BaseCommand from "../../structures/BaseCommand";
-import { IssueDiscipline } from "../../utils/IssueDiscipline";
-import { usernameResolver, userResolver } from "../../utils/resolvers";
+import { userResolver } from "../../utils/resolvers";
 
 export default class PingCommand extends BaseCommand {
 	constructor(client: FuzzyClient) {

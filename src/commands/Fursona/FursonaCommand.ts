@@ -1,8 +1,8 @@
-import { CommandInteraction, MessageActionRow, MessageComponentInteraction, MessageEmbed, MessageSelectMenu } from "discord.js";
+import { CommandInteraction, MessageEmbed } from "discord.js";
 import FuzzyClient from "../../lib/FuzzyClient";
+import { FursonaRepo } from "../../repositories/FursonaRepository";
 import BaseCommand from "../../structures/BaseCommand";
 import Fursona from "../../utils/Fursona";
-import { FursonaRepo } from "../../repositories/FursonaRepository";
 
 export default class FursonaCommand extends BaseCommand {
 	constructor(client: FuzzyClient) {
@@ -39,15 +39,19 @@ export default class FursonaCommand extends BaseCommand {
 				const sonaRepo = this.client.database.getCustomRepository(FursonaRepo);
 				await sonaBuilder.startQuestion();
 				const { age, height, name, sexuality, sonaUID, species } = sonaBuilder.toJSON();
-				sonaRepo.createSona({ age, height, sonaName: name, sonaSexuality: sexuality, sonaID: sonaUID, species }).then(() => {
-					const embed = new MessageEmbed()
-					.setAuthor(interaction.user.tag, interaction.user.displayAvatarURL({ dynamic: true }))
-					.setColor(this.client.config.color)
-					.setDescription(`Your sona has been created! To View or Further Customize it go to [https://hozol.xyz](https://hozol.xyz)`)
-					.setTimestamp()
-					.setFooter(`User ID ${interaction.user.id}`)
-					interaction.editReply({ embeds: [embed] })
-				});
+				sonaRepo
+					.createSona({ age, height, sonaName: name, sonaSexuality: sexuality, sonaID: sonaUID, species })
+					.then(() => {
+						const embed = new MessageEmbed()
+							.setAuthor(interaction.user.tag, interaction.user.displayAvatarURL({ dynamic: true }))
+							.setColor(this.client.config.color)
+							.setDescription(
+								`Your sona has been created! To View or Further Customize it go to [https://hozol.xyz](https://hozol.xyz)`
+							)
+							.setTimestamp()
+							.setFooter(`User ID ${interaction.user.id}`);
+						interaction.editReply({ embeds: [embed] });
+					});
 				break;
 			case "remove":
 				break;

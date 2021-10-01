@@ -1,8 +1,7 @@
-import beautify from "beautify";
+import { exec } from "child_process";
 import { CommandInteraction, MessageEmbed } from "discord.js";
 import FuzzyClient from "../../lib/FuzzyClient";
 import BaseSlashCommand from "../../structures/BaseCommand";
-import { exec } from "child_process";
 
 export default class UpdateCommand extends BaseSlashCommand {
 	constructor(client: FuzzyClient) {

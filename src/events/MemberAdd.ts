@@ -19,7 +19,10 @@ export default class MemberCreateEvent extends BaseEvent {
 			// TODO: Once Moderation System is Setup make it so it can show how many moderation action was taken on them and info
 			if (joinChannel && joinChannel.isText()) {
 				const embed = new MessageEmbed()
-					.setAuthor(`${member.user.tag} (${member.user.id})`, member.user.displayAvatarURL({ dynamic: true }))
+					.setAuthor(
+						`${member.user.tag} (${member.user.id})`,
+						member.user.displayAvatarURL({ dynamic: true })
+					)
 					.setColor("GREEN")
 					.setTitle("A Member Joined the Guild!")
 					.addField(
@@ -36,7 +39,11 @@ export default class MemberCreateEvent extends BaseEvent {
 				}
 				joinChannel.send({ embeds: [embed] });
 			}
-			if (moment().subtract(7, "days").isBefore(moment(member.user.createdAt)) && flagChannel && flagChannel.isText()) {
+			if (
+				moment().subtract(7, "days").isBefore(moment(member.user.createdAt)) &&
+				flagChannel &&
+				flagChannel.isText()
+			) {
 				flagChannel.send(`🚩 Red Flag! The ${member}'s (${member.user.id}) account is new!`);
 			}
 		}

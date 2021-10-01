@@ -4,11 +4,10 @@ import {
 	MessageComponentInteraction,
 	MessageEmbed,
 	MessageSelectMenu,
-	MessageSelectOptionData,
+	MessageSelectOptionData
 } from "discord.js";
-import FuzzyClient from "../lib/FuzzyClient";
-import uuid from "uuid";
 import { uniqueId } from "lodash";
+import FuzzyClient from "../lib/FuzzyClient";
 
 export default class Fursona {
 	public _id: number;

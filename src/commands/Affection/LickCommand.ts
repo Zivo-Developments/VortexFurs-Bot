@@ -28,7 +28,11 @@ export default class KissCommand extends BaseCommand {
 				.setImage(img.url)
 				.setColor(this.client!.config.color)
 				.setTimestamp()
-				.setFooter(`User ID: ${interaction.user.id} | Artist: ${img.artists.length > 0 ? img.artists.join(", ") : "Unknown"}`);
+				.setFooter(
+					`User ID: ${interaction.user.id} | Artist: ${
+						img.artists.length > 0 ? img.artists.join(", ") : "Unknown"
+					}`
+				);
 			interaction.reply({ embeds: [embed], content: `${interaction.user} Licked ${target}!` });
 		});
 	}

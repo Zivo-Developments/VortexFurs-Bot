@@ -1,7 +1,5 @@
-import { Fursona } from "../entity/Fursona";
 import { DeepPartial, EntityRepository, FindConditions, Repository } from "typeorm";
-import FuzzyClient from "../lib/FuzzyClient";
-import { CommandInteraction } from "discord.js";
+import { Fursona } from "../entity/Fursona";
 
 @EntityRepository(Fursona)
 export class FursonaRepo extends Repository<Fursona> {

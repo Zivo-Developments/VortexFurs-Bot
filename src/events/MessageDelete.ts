@@ -1,5 +1,4 @@
-import { GuildMember, InviteStageInstance, Message, MessageEmbed } from "discord.js";
-import moment from "moment";
+import { Message, MessageEmbed } from "discord.js";
 import FuzzyClient from "../lib/FuzzyClient";
 import { GuildRepo } from "../repositories/GuildRepository";
 import BaseEvent from "../structures/BaseEvent";

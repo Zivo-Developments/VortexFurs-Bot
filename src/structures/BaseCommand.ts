@@ -1,4 +1,4 @@
-import { ApplicationCommandPermissions, ApplicationCommandPermissionsManager, Interaction, PermissionFlags } from "discord.js";
+import { ApplicationCommandPermissions, Interaction, PermissionFlags } from "discord.js";
 import FuzzyClient from "../lib/FuzzyClient";
 import type { ICommandArgsOptions, ICommandOptions } from "../utils/types";
 

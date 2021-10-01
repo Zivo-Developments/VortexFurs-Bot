@@ -1,10 +1,4 @@
-import { Guild } from "../entity/Guild";
-import { DeepPartial, EntityRepository, FindConditions, Repository } from "typeorm";
-import FuzzyClient from "../lib/FuzzyClient";
-import { Member } from "../entity/Member";
-import { ModCase } from "../entity/ModCase";
-import { CommandInteraction, GuildMember } from "discord.js";
-import { MemberRepo } from "./MemberRepository";
+import { DeepPartial, EntityRepository, Repository } from "typeorm";
 import { Schedule } from "../entity/Schedules";
 
 @EntityRepository(Schedule)

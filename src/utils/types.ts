@@ -1,4 +1,4 @@
-import { ApplicationCommandOptionChoice, ApplicationCommandPermissions, CommandOptionChoiceResolvableType, CommandOptionDataTypeResolvable, PermissionFlags } from "discord.js";
+import { ApplicationCommandOptionChoice, CommandOptionDataTypeResolvable, PermissionFlags } from "discord.js";
 
 export interface ICommandOptions {
 	args?: ICommandArgsOptions[];

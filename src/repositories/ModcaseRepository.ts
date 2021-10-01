@@ -1,10 +1,5 @@
-import { Guild } from "../entity/Guild";
-import { DeepPartial, EntityRepository, FindConditions, Repository } from "typeorm";
-import FuzzyClient from "../lib/FuzzyClient";
-import { Member } from "../entity/Member";
+import { DeepPartial, EntityRepository, Repository } from "typeorm";
 import { ModCase } from "../entity/ModCase";
-import { CommandInteraction, GuildMember } from "discord.js";
-import { MemberRepo } from "./MemberRepository";
 
 @EntityRepository(ModCase)
 export class ModcaseRepo extends Repository<ModCase> {

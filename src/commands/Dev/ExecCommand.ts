@@ -1,8 +1,7 @@
-import beautify from "beautify";
+import { exec } from "child_process";
 import { CommandInteraction, MessageEmbed } from "discord.js";
 import FuzzyClient from "../../lib/FuzzyClient";
 import BaseSlashCommand from "../../structures/BaseCommand";
-import { exec } from "child_process";
 
 export default class ExecCommand extends BaseSlashCommand {
 	constructor(client: FuzzyClient) {
@@ -41,7 +40,9 @@ export default class ExecCommand extends BaseSlashCommand {
 			script.toLowerCase().includes("shutdown") ||
 			script.toLowerCase().includes("rm")
 		) {
-			throw new Error("mkdir, restart, reboot, shutdown, rm, and dot based directory structures are not permitted.");
+			throw new Error(
+				"mkdir, restart, reboot, shutdown, rm, and dot based directory structures are not permitted."
+			);
 		}
 
 		// Execute the command

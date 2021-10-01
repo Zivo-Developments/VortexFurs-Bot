@@ -1,13 +1,5 @@
-import {
-	ApplicationCommand,
-	ApplicationCommandManager,
-	GuildApplicationCommandManager,
-	GuildResolvable,
-} from "discord.js";
-import { REST } from "@discordjs/rest";
 import * as dotenv from "dotenv";
 import FuzzyClient from "./lib/FuzzyClient";
-import { Routes } from "discord-api-types";
 import { channelResolver } from "./utils/resolvers";
 dotenv.config();
 
@@ -35,10 +27,9 @@ process.on("unhandledRejection", async (e) => {
 		channel.send(
 			`${client.users.cache.get(
 				client.config.ownerID
-			)} Bot asked a user on a date and ranned into an **UNHANDLED REJECTION**: ${e}`
+			)} Bot asked a user on a date and ran into an **UNHANDLED REJECTION**: ${e}`
 		);
 	}
 });
-
 
 client.login(process.env.TOKEN as string);

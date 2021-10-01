@@ -1,15 +1,13 @@
-import { GuildMember, MessageEmbed, Guild, User } from "discord.js";
-import { uniqueId } from "lodash";
+import { Guild, MessageEmbed, User } from "discord.js";
 import moment from "moment";
+import { uuid } from "uuidv4";
 import { Guild as GuildEntity } from "../entity/Guild";
 import { Member } from "../entity/Member";
-import { ModCase } from "../entity/ModCase";
 import FuzzyClient from "../lib/FuzzyClient";
 import { GuildRepo } from "../repositories/GuildRepository";
 import { MemberRepo } from "../repositories/MemberRepository";
 import { ModcaseRepo } from "../repositories/ModcaseRepository";
 import { channelResolver } from "./resolvers";
-import { uuid } from "uuidv4";
 
 // TODO(vulpo): Check Back and Add Schedule to work with Temporary Actions
 // TODO(vulpo): Restrictions

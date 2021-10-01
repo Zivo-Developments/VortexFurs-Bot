@@ -1,4 +1,4 @@
-import { Message, MessageCollector, MessageEmbed, ReactionCollector, TextChannel, User } from "discord.js";
+import { Message, MessageCollector, MessageEmbed, ReactionCollector, TextChannel } from "discord.js";
 
 export default class DiscordMenu {
 	// TODO: Change it to use Discord Buttons Instead of reactions

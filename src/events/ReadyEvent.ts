@@ -1,11 +1,4 @@
-import {
-	ApplicationCommandData,
-	ApplicationCommandPermissionData,
-	ApplicationCommandPermissions,
-	GuildApplicationCommandPermissionData,
-} from "discord.js";
-import { Client } from "../entity/Client";
-import { Guild } from "../entity/Guild";
+import { GuildApplicationCommandPermissionData } from "discord.js";
 import FuzzyClient from "../lib/FuzzyClient";
 import { GuildRepo } from "../repositories/GuildRepository";
 import { MemberRepo } from "../repositories/MemberRepository";
