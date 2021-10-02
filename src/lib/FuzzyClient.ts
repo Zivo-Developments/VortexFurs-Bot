@@ -48,7 +48,7 @@ export default class FuzzyClient extends Client {
 			entities: ["dist/entity/**/*.js"],
 			migrations: ["dist/migration/**/*.js"],
 			synchronize: true,
-			logging: true,
+			logging: false,
 		}).catch((e) => {
 			console.log(`Unable to load database! ${e}`);
 			return process.exit();
