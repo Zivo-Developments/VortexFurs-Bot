@@ -8,11 +8,12 @@ import {
     MessageComponentInteraction,
     MessageEmbed,
     MessageSelectMenu,
+    Role,
 } from "discord.js";
 import FuzzyClient from "../../lib/FuzzyClient";
 import BaseCommand from "../../structures/BaseCommand";
 import { GuildRepo } from "../../repositories/GuildRepository";
-import { channelResolver } from "../../utils/resolvers";
+import { channelResolver, roleResolver } from "../../utils/resolvers";
 import { TextChannel } from "discord.js";
 
 export default class ConfigCommand extends BaseCommand {
@@ -44,25 +45,34 @@ export default class ConfigCommand extends BaseCommand {
         const guildData = await guildRepo.findOne({
             guildID: interaction.guild!.id,
         });
-        const loggingSettings = [
-            "autoModLogChannelID",
-            "banLogChannelID",
-            "channelLogChannelID",
-            "flagLogChannelID",
-            "imageLogChannelID",
-            "joinLogChannelID",
-            "kickLogChannelID",
-            "leaveLogChannelID",
-            "membersLogChannelID",
-            "messageLogChannelID",
-            "modCMDsLogChannelID",
-            "modmailLogChannelID",
-            "nickNameLogChannelID",
-            "vcLogChannelID",
-            "modLogChannelID",
-            "eventLogChannel",
-            "verificationLogChannelID",
-        ];
+        const loggingSettings = {
+            channels: [
+                "autoModLogChannelID",
+                "banLogChannelID",
+                "channelLogChannelID",
+                "flagLogChannelID",
+                "imageLogChannelID",
+                "joinLogChannelID",
+                "kickLogChannelID",
+                "leaveLogChannelID",
+                "membersLogChannelID",
+                "messageLogChannelID",
+                "modCMDsLogChannelID",
+                "modmailLogChannelID",
+                "nickNameLogChannelID",
+                "vcLogChannelID",
+                "modLogChannelID",
+                "eventLogChannel",
+                "verificationLogChannelID",
+            ],
+        };
+
+        const verificationSettings = {
+            roles: ["verifiedRoleID", "welcomeRoleID", "staffRoleID"],
+            channels: ["generalChannel", "pendingVerficiatonChannelID"],
+            welcomeMessage: "welcomeMessage",
+        };
+
         const filter: (m: MessageComponentInteraction) => boolean = (m) => {
             m.deferUpdate();
             return m.user.id === interaction.user.id;
@@ -70,8 +80,183 @@ export default class ConfigCommand extends BaseCommand {
 
         switch (interaction.options.getSubcommand()) {
             case "verification":
-                interaction.reply("This part is not setup!");
-            case "logging":
+                const verifyBtn = new MessageActionRow().addComponents(
+                    new MessageButton()
+                        .setStyle("PRIMARY")
+                        .setEmoji("✏️")
+                        .setLabel("Edit")
+                        .setCustomId("edit-verification"),
+                );
+                const verifyInfo = new MessageEmbed()
+                    .setAuthor(
+                        interaction.user.tag,
+                        interaction.user.displayAvatarURL({
+                            dynamic: true,
+                        }),
+                    )
+                    .setTitle("Verification Settings")
+                    .setDescription(
+                        `Welcome Message: \n\`\`\`${
+                            verificationSettings.welcomeMessage ? verificationSettings.welcomeMessage : "Not Set"
+                        }\`\`\``,
+                    )
+                    .setColor(this.client.config.color);
+                verificationSettings.channels.forEach((setting) =>
+                    verifyInfo.addField(
+                        setting,
+                        // @ts-expect-error
+                        guildData[setting]
+                            ? // @ts-expect-error: Should get the settings
+                              guildData[setting]
+                            : "Not Set",
+                        true,
+                    ),
+                );
+                verificationSettings.roles.forEach((setting) =>
+                    verifyInfo.addField(
+                        setting,
+                        // @ts-expect-error
+                        guildData[setting]
+                            ? // @ts-expect-error: Should get the settings
+                              guildData[setting]
+                            : "Not Set",
+                        true,
+                    ),
+                );
+                const verifyMsg = await interaction.channel!.send({ embeds: [verifyInfo], components: [verifyBtn] });
+                const buttonPush = await verifyMsg
+                    .awaitMessageComponent({
+                        filter,
+                        componentType: "BUTTON",
+                        time: 60000 * 5,
+                    })
+                    .catch(() => msg.delete().catch(() => {}));
+                if (buttonPush) {
+                    verifyMsg.delete();
+                    const embed = new MessageEmbed()
+                        .setAuthor(interaction.user.tag, interaction.user.displayAvatarURL({ dynamic: true }))
+                        .setColor(this.client.config.color)
+                        .setDescription("Please Select from the menu what you want to change!")
+                        .setFooter(`User ID: ${interaction.user.id}`);
+                    const menu = new MessageActionRow().addComponents(
+                        new MessageSelectMenu({
+                            customId: "menu-change-logging",
+                            placeholder: "Logging",
+                            maxValues: 1,
+                            minValues: 1,
+                            options: [
+                                {
+                                    label: "Verified Role",
+                                    value: "verifiedRoleID",
+                                    description: "This is give new members the verified role",
+                                },
+                                {
+                                    label: "Welcome Role",
+                                    value: "welcomeRoleID",
+                                    description: "This is used to ping people for welcoming",
+                                },
+                                {
+                                    label: "Staff Role ID",
+                                    value: "staffRoleID",
+                                    description: "Staff Role lol",
+                                },
+                                {
+                                    label: "General Channel",
+                                    value: "generalChannel",
+                                    description: "This is used to send welcome messages",
+                                },
+                                {
+                                    label: "Pending Verification Channel",
+                                    value: "pendingVerficiatonChannelID",
+                                    description: "This is used to send pending verification",
+                                },
+                            ],
+                        }),
+                    );
+
+                    const messageTwo = await interaction.channel!.send({ embeds: [embed], components: [menu] });
+                    const itemSelected = await messageTwo
+                        .awaitMessageComponent({
+                            filter,
+                            componentType: "SELECT_MENU",
+                            time: 60000 * 5,
+                        })
+                        .catch(() => msg.delete().catch(() => {}));
+                    if (itemSelected) {
+                        messageTwo.delete();
+                        const response = await this.client.utils.awaitReply(
+                            interaction.channel!,
+                            "What channel would you like the log to send",
+                            {
+                                max: 1,
+                                time: 60000 * 10,
+                                filter: (m) => m.author.id === interaction.user.id,
+                            },
+                            true,
+                        );
+                        if (response.content !== "cancel") {
+                            let channel = await channelResolver(this.client, response.content);
+                            let role = await roleResolver(response, response.content);
+                            const channelOrRole: TextChannel | Role | null =
+                                channel instanceof TextChannel ? channel : null || role || null;
+                            if (channelOrRole) {
+                                // @ts-expect-error
+                                if (guildData[itemSelected.values[0]] === channelOrRole.id) {
+                                    return interaction.channel!.send(
+                                        "**You can't set the channel to what it currently is**",
+                                    );
+                                }
+
+                                await guildRepo
+                                    .update(
+                                        { guildID: interaction.guild!.id },
+                                        // @ts-expect-error
+                                        { [itemSelected.values[0]]: channelOrRole.id },
+                                    )
+                                    .then(() => {
+                                        const success = new MessageEmbed()
+                                            .setAuthor(
+                                                interaction.user.tag,
+                                                interaction.user.displayAvatarURL({ dynamic: true }),
+                                            )
+                                            .setColor(this.client.config.color)
+                                            // @ts-expect-error
+                                            .setDescription(`${itemSelected.values[0]} is now set to ${channelOrRole}!`)
+                                            .setFooter(`User ID: ${interaction.user.id}`);
+                                        interaction.channel?.send({ embeds: [success] }).then((m) => {
+                                            setTimeout(() => {
+                                                m.delete();
+                                            }, 60000);
+                                        });
+                                    });
+                            } else {
+                                await guildRepo
+                                    .update(
+                                        { guildID: interaction.guild!.id },
+                                        // @ts-expect-error
+                                        { [itemSelected.values[0]]: response.content },
+                                    )
+                                    .then(() => {
+                                        const success = new MessageEmbed()
+                                            .setAuthor(
+                                                interaction.user.tag,
+                                                interaction.user.displayAvatarURL({ dynamic: true }),
+                                            )
+                                            .setColor(this.client.config.color)
+                                            // @ts-expect-error
+                                            .setDescription(`${itemSelected.values[0]} is now set to ${response.content}!`)
+                                            .setFooter(`User ID: ${interaction.user.id}`);
+                                        interaction.channel?.send({ embeds: [success] }).then((m) => {
+                                            setTimeout(() => {
+                                                m.delete();
+                                            }, 60000);
+                                        });
+                                    });
+                            }
+                        }
+                        return;
+                    }
+                }
                 const button = new MessageActionRow().addComponents(
                     new MessageButton().setStyle("PRIMARY").setEmoji("✏️").setLabel("Edit").setCustomId("edit-logging"),
                 );
@@ -84,7 +269,7 @@ export default class ConfigCommand extends BaseCommand {
                     )
                     .setTitle("Logging Settings")
                     .setColor(this.client.config.color);
-                loggingSettings.forEach((setting) =>
+                loggingSettings.channels.forEach((setting) =>
                     info.addField(
                         setting,
                         // @ts-expect-error
@@ -96,15 +281,45 @@ export default class ConfigCommand extends BaseCommand {
                     ),
                 );
                 const msg = await interaction.channel!.send({ embeds: [info], components: [button] });
-                const buttonPush = await msg
+                interaction.reply("This part is not setup!");
+            case "logging":
+                const loggingButton = new MessageActionRow().addComponents(
+                    new MessageButton().setStyle("PRIMARY").setEmoji("✏️").setLabel("Edit").setCustomId("edit-logging"),
+                );
+                const loggingInfo = new MessageEmbed()
+                    .setAuthor(
+                        interaction.user.tag,
+                        interaction.user.displayAvatarURL({
+                            dynamic: true,
+                        }),
+                    )
+                    .setTitle("Logging Settings")
+                    .setColor(this.client.config.color);
+                loggingSettings.channels.forEach((setting) =>
+                    info.addField(
+                        setting,
+                        // @ts-expect-error
+                        guildData[setting]
+                            ? // @ts-expect-error: Should get the settings
+                              guildData[setting]
+                            : "Not Set",
+                        true,
+                    ),
+                );
+
+                const loggingMsg = await interaction.channel!.send({
+                    embeds: [loggingInfo],
+                    components: [loggingButton],
+                });
+                const loggingButtonPush = await loggingMsg
                     .awaitMessageComponent({
                         filter,
                         componentType: "BUTTON",
                         time: 60000 * 5,
                     })
                     .catch(() => msg.delete().catch(() => {}));
-                if (buttonPush) {
-                    msg.delete();
+                if (loggingButtonPush) {
+                    loggingMsg.delete();
                     const embed = new MessageEmbed()
                         .setAuthor(interaction.user.tag, interaction.user.displayAvatarURL({ dynamic: true }))
                         .setColor(this.client.config.color)
