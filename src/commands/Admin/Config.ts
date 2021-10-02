@@ -1,20 +1,17 @@
 import {
-    ButtonInteraction,
-    CollectorFilter,
     CommandInteraction,
-    Interaction,
     MessageActionRow,
     MessageButton,
     MessageComponentInteraction,
     MessageEmbed,
     MessageSelectMenu,
     Role,
+    TextChannel,
 } from "discord.js";
 import FuzzyClient from "../../lib/FuzzyClient";
+import { GuildRepo } from "../../repositories";
 import BaseCommand from "../../structures/BaseCommand";
-import { GuildRepo } from "../../repositories/GuildRepository";
-import { channelResolver, roleResolver } from "../../utils/resolvers";
-import { TextChannel } from "discord.js";
+import { channelResolver, roleResolver } from "../../utils";
 
 export default class ConfigCommand extends BaseCommand {
     constructor(client: FuzzyClient) {
@@ -40,7 +37,7 @@ export default class ConfigCommand extends BaseCommand {
         });
     }
     async run(interaction: CommandInteraction) {
-        interaction.reply("Settings");
+        interaction.deleteReply();
         const guildRepo = this.client.database.getCustomRepository(GuildRepo);
         const guildData = await guildRepo.findOne({
             guildID: interaction.guild!.id,
@@ -130,7 +127,7 @@ export default class ConfigCommand extends BaseCommand {
                         componentType: "BUTTON",
                         time: 60000 * 5,
                     })
-                    .catch(() => msg.delete().catch(() => {}));
+                    .catch(() => verifyMsg.delete().catch(() => {}));
                 if (buttonPush) {
                     verifyMsg.delete();
                     const embed = new MessageEmbed()
@@ -181,7 +178,7 @@ export default class ConfigCommand extends BaseCommand {
                             componentType: "SELECT_MENU",
                             time: 60000 * 5,
                         })
-                        .catch(() => msg.delete().catch(() => {}));
+                        .catch(() => verifyMsg.delete().catch(() => {}));
                     if (itemSelected) {
                         messageTwo.delete();
                         const response = await this.client.utils.awaitReply(
@@ -243,8 +240,10 @@ export default class ConfigCommand extends BaseCommand {
                                                 interaction.user.displayAvatarURL({ dynamic: true }),
                                             )
                                             .setColor(this.client.config.color)
-                                            // @ts-expect-error
-                                            .setDescription(`${itemSelected.values[0]} is now set to ${response.content}!`)
+                                            .setDescription(
+                                                // @ts-expect-error
+                                                `${itemSelected.values[0]} is now set to ${response.content}!`,
+                                            )
                                             .setFooter(`User ID: ${interaction.user.id}`);
                                         interaction.channel?.send({ embeds: [success] }).then((m) => {
                                             setTimeout(() => {
@@ -260,28 +259,7 @@ export default class ConfigCommand extends BaseCommand {
                 const button = new MessageActionRow().addComponents(
                     new MessageButton().setStyle("PRIMARY").setEmoji("✏️").setLabel("Edit").setCustomId("edit-logging"),
                 );
-                const info = new MessageEmbed()
-                    .setAuthor(
-                        interaction.user.tag,
-                        interaction.user.displayAvatarURL({
-                            dynamic: true,
-                        }),
-                    )
-                    .setTitle("Logging Settings")
-                    .setColor(this.client.config.color);
-                loggingSettings.channels.forEach((setting) =>
-                    info.addField(
-                        setting,
-                        // @ts-expect-error
-                        guildData[setting]
-                            ? // @ts-expect-error: Should get the settings
-                              guildData[setting]
-                            : "Not Set",
-                        true,
-                    ),
-                );
-                const msg = await interaction.channel!.send({ embeds: [info], components: [button] });
-                interaction.reply("This part is not setup!");
+                break;
             case "logging":
                 const loggingButton = new MessageActionRow().addComponents(
                     new MessageButton().setStyle("PRIMARY").setEmoji("✏️").setLabel("Edit").setCustomId("edit-logging"),
@@ -296,7 +274,7 @@ export default class ConfigCommand extends BaseCommand {
                     .setTitle("Logging Settings")
                     .setColor(this.client.config.color);
                 loggingSettings.channels.forEach((setting) =>
-                    info.addField(
+                    loggingInfo.addField(
                         setting,
                         // @ts-expect-error
                         guildData[setting]
@@ -317,7 +295,7 @@ export default class ConfigCommand extends BaseCommand {
                         componentType: "BUTTON",
                         time: 60000 * 5,
                     })
-                    .catch(() => msg.delete().catch(() => {}));
+                    .catch(() => loggingMsg.delete().catch(() => {}));
                 if (loggingButtonPush) {
                     loggingMsg.delete();
                     const embed = new MessageEmbed()
@@ -429,7 +407,7 @@ export default class ConfigCommand extends BaseCommand {
                             componentType: "SELECT_MENU",
                             time: 60000 * 5,
                         })
-                        .catch(() => msg.delete().catch(() => {}));
+                        .catch(() => loggingMsg.delete().catch(() => {}));
                     if (itemSelected) {
                         messageTwo.delete();
                         const response = await this.client.utils.awaitReply(
