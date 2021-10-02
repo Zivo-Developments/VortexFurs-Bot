@@ -148,12 +148,12 @@ export async function roleNameResolver(message: Message, roleName: string): Prom
 	}
 }
 
-export async function roleResolver(message: Message, mention: string): Promise<Role> {
+export async function roleResolver(message: Message, mention: string): Promise<Role| null> {
 	const role = roleRegex.test(mention) ? await message.guild?.roles.fetch(roleRegex.exec(mention)![1]) : null;
 
 	if (role) return role;
 
-	throw new Error(`Invalid role: ${mention} Remember, the bot can only resolve roles from the same guild.`);
+	return null
 }
 
 export async function usernameResolver(client: FuzzyClient, interaction: CommandInteraction, username: string): Promise<User> {
