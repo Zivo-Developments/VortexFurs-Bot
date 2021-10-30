@@ -1,6 +1,6 @@
 # Frenzy Furs
 
-Discord Bot for The Frenzy Furs Discord Server a Furry Server that aims to be different and unique from the others
+This repo serves as the Discord Bot for The Frenzy Furs Discord Server a Furry Server that aims to be different and unique from the others
 
 ## About the Bot
 
