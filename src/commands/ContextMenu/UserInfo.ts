@@ -1,15 +1,6 @@
-import {
-    CommandInteraction,
-    ContextMenuInteraction,
-    GuildMember,
-    MessageEmbed,
-    PermissionFlags,
-    Role,
-} from "discord.js";
+import { ContextMenuInteraction, MessageEmbed, PermissionFlags, Role } from "discord.js";
 import moment from "moment";
-import { Member } from "../../entity/Member";
 import FuzzyClient from "../../lib/FuzzyClient";
-import { MemberRepo } from "../../repositories";
 import BaseSlashCommand from "../../structures/BaseCommand";
 
 export default class PingCommand extends BaseSlashCommand {
