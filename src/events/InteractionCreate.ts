@@ -85,12 +85,12 @@ export default class InteractionCreateEvent extends BaseEvent {
         }
 
         if (interaction.isButton()) {
+            if (interaction.customId === "continue") return;
             const filter: (m: MessageComponentInteraction) => boolean = (m) => {
                 m.deferUpdate();
                 return m.user.id === interaction.user.id;
             };
             // Der the button
-            interaction.deferUpdate();
             if (interaction.customId === "start-verification") {
                 const verify = new Verification(client, interaction.user, interaction.guild!);
                 const embed = new MessageEmbed()
@@ -162,6 +162,7 @@ export default class InteractionCreateEvent extends BaseEvent {
                             }
                         }
                         pendingVerificationMsg!.delete();
+                        await Verification.DeleteVerification(client, verify.userID, verify.guildID);
                         return;
                     }
 
@@ -246,7 +247,7 @@ export default class InteractionCreateEvent extends BaseEvent {
                                     }
                                 }
                                 pendingVerificationMsg!.delete();
-                                verifyRepo.delete({ userID: verifyingMember.user.id, guildID: interaction.guild.id });
+                                await Verification.DeleteVerification(client, verify.userID, verify.guildID);
                             } else {
                                 return;
                             }
@@ -327,7 +328,7 @@ export default class InteractionCreateEvent extends BaseEvent {
                                 if (interaction.guild.channels.cache.get(verify.questionChannelID)) {
                                     interaction.guild.channels.cache.get(verify.questionChannelID)?.delete();
                                 }
-                                verifyRepo.delete({ userID: verifyingMember.user.id, guildID: interaction.guild.id });
+                                await Verification.DeleteVerification(client, verify.userID, verify.guildID); 
                             } else {
                                 return;
                             }
@@ -400,7 +401,7 @@ export default class InteractionCreateEvent extends BaseEvent {
                             if (interaction.guild.channels.cache.get(verify.questionChannelID)) {
                                 interaction.guild.channels.cache.get(verify.questionChannelID)?.delete();
                             }
-                            verifyRepo.delete({ userID: verifyingMember.user.id, guildID: interaction.guild.id });
+                           await Verification.DeleteVerification(client, verify.userID, verify.guildID); 
 
                             if (guildData?.generalChannel) {
                                 const generalChannel = guild?.channels.cache.get(guildData.generalChannel);
@@ -510,10 +511,7 @@ export default class InteractionCreateEvent extends BaseEvent {
                                     if (interaction.guild.channels.cache.get(verify.questionChannelID)) {
                                         interaction.guild.channels.cache.get(verify.questionChannelID)?.delete();
                                     }
-                                    verifyRepo.delete({
-                                        userID: verifyingMember.user.id,
-                                        guildID: interaction.guild.id,
-                                    });
+                                    await Verification.DeleteVerification(client, verify.userID, verify.guildID); 
                                 } else {
                                     return;
                                 }

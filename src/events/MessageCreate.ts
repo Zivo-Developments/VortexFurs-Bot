@@ -5,6 +5,7 @@ import { GuildRepo } from "../repositories/GuildRepository";
 import BaseEvent from "../structures/BaseEvent";
 import { channelResolver, messageResolver } from "../utils/resolvers";
 import { VerificationRepo } from "../repositories/VerificationRepo";
+import Verification from "../utils/Verification";
 
 export default class MemberCreateEvent extends BaseEvent {
     constructor(client: FuzzyClient) {
@@ -48,7 +49,7 @@ export default class MemberCreateEvent extends BaseEvent {
                             verify.questionChannelID,
                         ) as TextChannel;
                         questioningChannel.delete();
-                        verifyRepo.delete({ userID: verify.userID, guildID: message.guild!.id });
+                        await Verification.DeleteVerification(client, verify.userID, verify.guildID);  
                         const pendingChannel = message.guild?.channels.cache.get(
                             guildData?.pendingVerficiatonChannelID!,
                         ) as TextChannel;
@@ -127,7 +128,7 @@ export default class MemberCreateEvent extends BaseEvent {
                                             files: [{ attachment: buffer, name: `${message.channel.name}.txt` }],
                                         });
                                     }
-                                    verifyRepo.delete({ userID: verify.userID, guildID: message.guild!.id });
+                                    await Verification.DeleteVerification(client, verify.userID, verify.guildID);
                                     await message.channel.delete().catch((e) => {
                                         message.channel.send(`Unable to delete channel, here's why ${e}`);
                                     });
@@ -181,7 +182,7 @@ export default class MemberCreateEvent extends BaseEvent {
                                             files: [{ attachment: buffer, name: `${message.channel.name}.txt` }],
                                         });
                                     }
-                                    verifyRepo.delete({ userID: verify.userID, guildID: message.guild!.id });
+                                    await Verification.DeleteVerification(client, verify.userID, verify.guildID);                                     
                                     await message.channel.delete().catch((e) => {
                                         message.channel.send(`Unable to delete channel, here's why ${e}`);
                                     });

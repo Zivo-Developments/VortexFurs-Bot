@@ -72,7 +72,7 @@ export default class ReadyEvent extends BaseEvent {
             });
 
             client.users.cache.get(client.config.ownerID)?.send("READY");
-            this.client.user?.setStatus("online");
+            client.user?.setStatus("online");
             client._logger.info("Completed");
         
     }

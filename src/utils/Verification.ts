@@ -137,8 +137,8 @@ export default class Verification {
             );
     }
 
-    public static DeleteVerification(client: FuzzyClient, userID: string, guildID: string) {
+    public static async DeleteVerification(client: FuzzyClient, userID: string, guildID: string) {
         const verifyRepo = client.database!.getCustomRepository(VerificationRepo);
-        verifyRepo.delete({ userID, guildID });
+        await verifyRepo.delete({ userID, guildID });
     }
 }
