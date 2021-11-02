@@ -28,7 +28,7 @@ export default class PingCommand extends BaseSlashCommand {
             .setDescription(`Bio: ${profile.bio ? profile.bio : "No Bio"}`)
             .addField(
                 "Roles",
-                (member.user as unknown as GuildMember)!.roles.cache
+                (member as unknown as GuildMember)!.roles.cache
                     .sort((a: Role, b: Role) => b.position - a.position)
                     .map((r) => r)
                     .join(" "),
