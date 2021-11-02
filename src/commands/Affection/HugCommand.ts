@@ -8,6 +8,7 @@ export default class HugCommand extends BaseCommand {
             name: "hug",
             shortDescription: "Hug a member!",
             userPermissions: [],
+            type: "CHAT_INPUT",
             botPermissions: [],
             args: [
                 {

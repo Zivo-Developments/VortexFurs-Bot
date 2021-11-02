@@ -6,6 +6,7 @@ export default class ConfigCommand extends BaseCommand {
     constructor(client: FuzzyClient) {
         super(client, {
             name: "vmsg",
+            type: "CHAT_INPUT",
             botPermissions: [],
             shortDescription: "Send the verification message!",
             userPermissions: ["MANAGE_GUILD"],

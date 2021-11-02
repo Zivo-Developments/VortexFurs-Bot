@@ -21,7 +21,7 @@ export default class InteractionCreateEvent extends BaseEvent {
         });
     }
     async run(client: FuzzyClient, interaction: Interaction) {
-        if (interaction.isCommand()) {
+        if (interaction.isCommand() || interaction.isContextMenu()) {
             if (!interaction.guild)
                 interaction.reply({
                     content:

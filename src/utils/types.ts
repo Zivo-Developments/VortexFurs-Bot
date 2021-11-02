@@ -7,8 +7,9 @@ export interface ICommandOptions {
     group?: string;
     name: string;
     ownerOnly?: boolean;
+    type: "CHAT_INPUT" | "USER" | "MESSAGE"
     runIn?: "both" | "dms" | "servers";
-    shortDescription: string;
+    shortDescription?: string;
     usage?: string;
     userPermissions: Array<keyof PermissionFlags>;
     botPermissions: Array<keyof PermissionFlags>;

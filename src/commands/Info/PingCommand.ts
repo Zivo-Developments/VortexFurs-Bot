@@ -10,6 +10,7 @@ export default class PingCommand extends BaseCommand {
             shortDescription: "Ping the bot!",
             userPermissions: [],
             args: [],
+            type: "CHAT_INPUT",
             cooldown: 100,
             extendedDescription: "Ping the bot and get it's latency",
         });

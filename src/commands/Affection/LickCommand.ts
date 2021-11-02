@@ -7,6 +7,7 @@ export default class KissCommand extends BaseCommand {
         super(client, {
             name: "lick",
             shortDescription: "Lick a member!",
+            type: "CHAT_INPUT",
             userPermissions: [],
             botPermissions: [],
             args: [

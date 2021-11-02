@@ -17,6 +17,7 @@ export default class ConfigCommand extends BaseCommand {
     constructor(client: FuzzyClient) {
         super(client, {
             name: "config",
+            type: "CHAT_INPUT",
             botPermissions: [],
             shortDescription: "Configure the bot!",
             userPermissions: ["MANAGE_GUILD"],

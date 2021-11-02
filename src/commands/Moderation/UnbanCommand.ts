@@ -7,6 +7,7 @@ export default class PingCommand extends BaseCommand {
     constructor(client: FuzzyClient) {
         super(client, {
             name: "unban",
+            type: "CHAT_INPUT",
             botPermissions: ["BAN_MEMBERS"],
             shortDescription: "Unban a member!",
             userPermissions: ["BAN_MEMBERS"],

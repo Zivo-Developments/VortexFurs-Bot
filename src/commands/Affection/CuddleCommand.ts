@@ -6,6 +6,7 @@ export default class HugCommand extends BaseCommand {
     constructor(client: FuzzyClient) {
         super(client, {
             name: "cuddle",
+            type: "CHAT_INPUT",
             shortDescription: "Cuddle a member!",
             userPermissions: [],
             botPermissions: [],

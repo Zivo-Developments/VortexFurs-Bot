@@ -10,9 +10,13 @@ export class Badges {
     @Column({ default: null })
     name: string;
     @Column({ default: null })
-    uid: string;
+    referenceName: string;
     @Column({ default: null })
     info: string;
     @Column({ default: null })
     icon: string;
+    @Column({ default: null })
+    uid: string;
+    @Column({ default: false })
+    gold: boolean;
 }

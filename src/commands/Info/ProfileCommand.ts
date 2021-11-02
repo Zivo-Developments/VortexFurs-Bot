@@ -11,6 +11,7 @@ export default class PingCommand extends BaseSlashCommand {
             shortDescription: "Get your profile information",
             args: [],
             cooldown: 0,
+            type: "CHAT_INPUT",
             userPermissions: [],
             botPermissions: [],
         });

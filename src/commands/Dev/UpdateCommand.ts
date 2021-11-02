@@ -9,6 +9,7 @@ export default class UpdateCommand extends BaseSlashCommand {
             name: "update",
             shortDescription: "Update the Bot!",
             args: [],
+            type: "CHAT_INPUT",
             cooldown: 0,
             userPermissions: [],
             botPermissions: [],

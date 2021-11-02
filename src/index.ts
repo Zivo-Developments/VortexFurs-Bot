@@ -23,7 +23,7 @@ loadData();
 process.on("uncaughtException", async (e) => {
     const channel = await channelResolver(client, client.config.devLogsID);
     if (channel && channel.isText()) {
-        channel.send(`${client.users.cache.get(client.config.ownerID)} Bot ran into an **UNCAUGHTEXCEPTION**: ${e}`);
+        channel.send(`${client.users.cache.get(client.config.ownerID)} Bot ran into an **UNCAUGHT EXCEPTION**: ${e}`);
     }
 });
 process.on("unhandledRejection", async (e) => {

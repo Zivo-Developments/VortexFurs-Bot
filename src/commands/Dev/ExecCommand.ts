@@ -19,6 +19,7 @@ export default class ExecCommand extends BaseSlashCommand {
             cooldown: 0,
             userPermissions: [],
             botPermissions: [],
+            type: "CHAT_INPUT",
             ownerOnly: true,
         });
     }

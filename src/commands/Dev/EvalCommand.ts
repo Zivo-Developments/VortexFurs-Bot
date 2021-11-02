@@ -18,6 +18,7 @@ export default class EvalCommand extends BaseSlashCommand {
             ],
             cooldown: 0,
             userPermissions: [],
+            type: "CHAT_INPUT",
             botPermissions: [],
             ownerOnly: true,
         });

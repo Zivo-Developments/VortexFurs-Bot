@@ -8,6 +8,7 @@ export default abstract class BaseCommand {
     public cooldown?: number;
     public extendedDescription?: string;
     public group?: string;
+    public type: "CHAT_INPUT" | "USER" | "MESSAGE";
     public name: string;
     public description: string;
     public ownerOnly?: boolean;
@@ -21,13 +22,14 @@ export default abstract class BaseCommand {
         this.client = client;
         this.args = options.args;
         this.cooldown = options.cooldown;
+        this.type = options.type
         this.extendedDescription = options.extendedDescription;
         this.group = options.group;
         this.name = options.name;
         this.ownerOnly = options.ownerOnly || false;
         this.runIn = options.runIn;
         this.usage = options.usage;
-        this.description = options.shortDescription;
+        this.description = options.shortDescription || "";
         this.userPermissions = options.userPermissions || [];
         this.botPermissions = options.botPermissions || [];
     }

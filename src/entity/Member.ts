@@ -10,17 +10,17 @@ export class Member {
     userID: string;
     @Column({ default: null })
     guildID: string;
-    @Column({ default: null })
+    @Column({ default: 0 })
     tokens: number;
     @Column({ type: "text", default: null })
     bio: string;
-    @Column({ default: null })
+    @Column({ default: false })
     muted: boolean;
-    @Column({ default: null })
+    @Column({ default: 0 })
     xp: number;
     @Column({ default: false })
     created: boolean;
-    @Column({ default: null })
+    @Column({ default: 0 })
     messages: number
     @OneToMany(() => Fursona, (sona) => sona.owner)
     sonas: Fursona[];

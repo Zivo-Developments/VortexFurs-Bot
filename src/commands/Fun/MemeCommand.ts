@@ -8,6 +8,7 @@ export default class MemeCommand extends BaseCommand {
         super(client, {
             name: "meme",
             shortDescription: "Get a meme from a sub reddit",
+            type: "CHAT_INPUT",
             userPermissions: [],
             botPermissions: [],
             args: [],

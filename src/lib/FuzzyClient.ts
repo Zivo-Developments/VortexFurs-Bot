@@ -1,4 +1,5 @@
 import {
+    ApplicationCommandData,
     ApplicationCommandOptionData,
     ChatInputApplicationCommandData,
     Client,
@@ -25,7 +26,7 @@ export default class FuzzyClient extends Client {
     aliases: Collection<string, string>;
     schedules: any;
     furryAPI: Yiffy;
-    arrayOfSlashCommands: (ChatInputApplicationCommandData & BaseCommand)[];
+    arrayOfSlashCommands: (BaseCommand & ApplicationCommandData)[];
     scheduleRepo: ScheduleRepo;
     scheduleManager: ScheduleManager;
     utils: Utils;

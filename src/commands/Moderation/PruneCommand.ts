@@ -7,6 +7,7 @@ export default class PurgeCommand extends BaseCommand {
         super(client, {
             name: "purge",
             botPermissions: ["MANAGE_MESSAGES"],
+            type: "CHAT_INPUT",
             shortDescription: "Clear x messages!",
             userPermissions: ["MANAGE_MESSAGES"],
             args: [

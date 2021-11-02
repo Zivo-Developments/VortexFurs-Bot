@@ -7,6 +7,7 @@ export default class ExecCommand extends BaseSlashCommand {
         super(client, {
             name: "reboot",
             shortDescription: "Stop & Reload the Bot!",
+            type: "CHAT_INPUT",
             args: [],
             cooldown: 0,
             userPermissions: [],

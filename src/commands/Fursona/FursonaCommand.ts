@@ -28,6 +28,7 @@ export default class FursonaCommand extends BaseCommand {
                     description: "View a Sona!",
                 },
             ],
+            type: "CHAT_INPUT",
             cooldown: 100,
             extendedDescription: "Manage your sonas",
         });
