@@ -36,7 +36,7 @@ export default class PingCommand extends BaseSlashCommand {
             .addField("More Stuff?", "Coming Soon")
             .setColor("#ff1493"!)
             .setURL(`https://www.hozol.xyz/profile/${member.id}`)
-            .setThumbnail(interaction.user?.avatarURL({ dynamic: true })!);
+            .setThumbnail(member.user?.avatarURL({ dynamic: true })!);
         interaction.reply({ embeds: [embed], ephemeral: true });
     }
 }
