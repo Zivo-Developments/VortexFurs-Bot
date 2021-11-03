@@ -10,7 +10,7 @@ export class Schedule {
     @Column({ default: null })
     task: string;
     @Column({ type: "jsonb" })
-    data: object;
+    data: ScheduleData;
     @Column({ default: null })
     lastRun: string;
     @Column({ default: null })
@@ -19,4 +19,9 @@ export class Schedule {
     catchUp: boolean;
     @Column({ default: null })
     cron: string;
+}
+
+interface ScheduleData {
+    userID?: string;
+    guildID?: string;
 }

@@ -1,4 +1,5 @@
-import { DeepPartial, EntityRepository, Repository } from "typeorm";
+import { DeepPartial, EntityRepository, FindConditions, Repository } from "typeorm";
+import { Member } from "../entity/Member";
 import { Schedule } from "../entity/Schedules";
 
 @EntityRepository(Schedule)
@@ -10,5 +11,11 @@ export class ScheduleRepo extends Repository<Schedule> {
 
     public async getAll() {
         return await this.find({});
+    }
+
+    public async findOrCreate(condition: FindConditions<Schedule>, create: DeepPartial<Schedule>) {
+        const schedule = await this.findOne(condition);
+        if (!schedule) await this.save(this.create(create));
+        return schedule;
     }
 }

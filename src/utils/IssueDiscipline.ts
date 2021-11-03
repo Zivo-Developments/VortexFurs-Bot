@@ -272,8 +272,8 @@ export class IssueDiscipline {
                         uid: `d-${this.case}`,
                         task: "removeBan",
                         data: {
-                            user: this.violator.id,
-                            guild: this.guild.id,
+                            userID: this.violator.id,
+                            guildID: this.guild.id,
                         },
                         nextRun: moment().add(this.banDuration, "days").toISOString(true),
                     })
@@ -313,8 +313,8 @@ export class IssueDiscipline {
                         uid: `d-${this.case}`,
                         task: "removeMute",
                         data: {
-                            user: this.violator.id,
-                            guild: this.guild.id,
+                            userID: this.violator.id,
+                            guildID: this.guild.id,
                         },
                         nextRun: moment().add(this.muteDuration, "minutes").toISOString(true),
                     })

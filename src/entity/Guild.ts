@@ -53,4 +53,6 @@ export class Guild {
     pendingVerficiatonChannelID: string;
     @Column({ default: null })
     eventLogChannel: string;
+    @Column({ default: null })
+    disboardChannel: string;
 }

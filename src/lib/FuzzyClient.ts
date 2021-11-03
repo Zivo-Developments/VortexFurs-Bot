@@ -19,6 +19,7 @@ import * as config from "../config.json";
 import Logger from "../utils/Logger";
 import { GuildRepo } from "../repositories";
 import { guildResolver } from "../utils";
+import moment from "moment";
 
 export default class FuzzyClient extends Client {
     _logger: Logger;
@@ -109,6 +110,17 @@ export default class FuzzyClient extends Client {
 
     public async loadSchedules() {
         this._logger.debug("Setting Up Schedules");
+        await this.scheduleRepo.findOrCreate(
+            { uid: "GLOBAL-MIN" },
+            {
+                uid: "GLOBAL-MIN",
+                task: "GLOBAL-MIN", 
+                catchUp: true,
+                data: {},
+                nextRun: moment().add(1, "minute").toISOString(true),
+                cron: "0 * * * * *",
+            },
+        );
         const records = await this.scheduleRepo.getAll();
         records.forEach(async (record) => {
             await this.scheduleManager

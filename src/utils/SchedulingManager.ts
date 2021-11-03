@@ -92,9 +92,8 @@ export default class ScheduleManager {
     public async executeTasks(record: Schedule) {
         if (record.task) {
             const { task } = await import(`./../tasks/${record.task}`);
-            task(this.client, record).catch((e: string) => {
-                console.error(`There was an error executing ${record.task} ${e}`);
-            });
+            await task(this.client, record)
+            return;
         }
     }
 }

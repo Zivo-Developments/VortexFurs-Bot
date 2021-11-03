@@ -3,5 +3,7 @@
     "guildID": "",
     "ownerID": "",
     "ghLink": "",
-    "devLogsID": ""
+    "devLogsID": "",
+    "bumpReminderRoleID": ""
+
 }

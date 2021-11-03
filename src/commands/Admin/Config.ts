@@ -59,6 +59,7 @@ export default class ConfigCommand extends BaseCommand {
                 "nickNameLogChannelID",
                 "vcLogChannelID",
                 "modLogChannelID",
+                "disboardChannel",
                 "eventLogChannel",
                 "verificationLogChannelID",
             ],
@@ -400,6 +401,11 @@ export default class ConfigCommand extends BaseCommand {
                                     label: "Mod Log Channel",
                                     value: "modLogChannelID",
                                     description: "Place where all moderation actions goes",
+                                },
+                                {
+                                    label: "Disboard Channel",
+                                    value: "disboardChannel",
+                                    description: "Disboard Bump reminders"
                                 },
                             ],
                         }),
