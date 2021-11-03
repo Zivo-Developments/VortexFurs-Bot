@@ -132,7 +132,7 @@ export default class FuzzyClient extends Client {
                 data: {
                     guildID: this.config.guildID
                 },
-                cron: "0 55 5,11,17,23 * * *",
+                cron: "0 59 5,11,17,23 * * *",
             },
         );
         const records = await this.scheduleRepo.getAll();
