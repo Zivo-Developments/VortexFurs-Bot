@@ -30,13 +30,10 @@ export default class MemberCreateEvent extends BaseEvent {
                             client._logger.debug("Adding Bump to the Schedule");
                             await client.scheduleManager.addSchedule(data);
                         });
-                    const userOrMemberRegex = /^(?:<@!?)?(\d{17,19})>?$/;
                     message.channel.send(
-                        `Thanks for Bumping ${userOrMemberRegex.exec(
-                            message.embeds[0].description,
-                        )}!\nA reminder for the next bump will go off at 2hrs (<t:${moment(Date.now())
+                        `Thanks for Bumping!\nA reminder for the next bump will go off at 2hrs (<t:${moment(Date.now())
                             .add(2, "hours")
-                            .unix()}:F>`,
+                            .unix()}:F>)`,
                     );
                 } else {
                     // IF the bump wasn't success check if the reminder exist otherwise make it

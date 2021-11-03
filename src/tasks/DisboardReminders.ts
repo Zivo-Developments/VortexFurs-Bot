@@ -9,7 +9,8 @@ export async function task(client: FuzzyClient, record: Schedule) {
     const GuildRepoC = client.database.getCustomRepository(GuildRepo);
     const guildData = await GuildRepoC.findOne({ guildID: record.data.guildID });
     const guild = client.guilds.cache.get(record.data.guildID!);
-    if (!guild) if (!guildData?.disboardChannel) return;
+    if (!guild) return;
+    if (!guildData?.disboardChannel) return;
     const disboardChannel = (await channelResolver(client, guildData?.disboardChannel!)) as TextChannel;
     const embed = new MessageEmbed()
         .setAuthor(guild?.name!, guild?.iconURL({ dynamic: true })!)
