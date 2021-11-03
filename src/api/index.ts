@@ -131,7 +131,8 @@ export const api = (client: FuzzyClient) => {
             profileData: {
                 bio: profile.bio,
                 xp: profile.xp,
-                roles: member?.roles.cache.map((r) => r.name),
+                roles: member?.roles.cache.filter(r => r.permissions.bitfield === 0n).map((r) => r.name),
+                color: member.displayHexColor,
                 tokens: profile.tokens,
                 // TODO: ACHIEVEMENTS & BADGES
             },
