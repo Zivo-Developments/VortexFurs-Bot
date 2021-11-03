@@ -31,9 +31,9 @@ export default class MemberCreateEvent extends BaseEvent {
                             await client.scheduleManager.addSchedule(data);
                         });
                     message.channel.send(
-                        `Thanks for Bumping!\nA reminder for the next bump will go off at 2hrs (<t:${moment(Date.now())
+                        `Thanks for Bumping!\nThe next reminder will be at <t:${moment(Date.now())
                             .add(2, "hours")
-                            .unix()}:F>)`,
+                            .unix()}:t>`,
                     );
                 } else {
                     // IF the bump wasn't success check if the reminder exist otherwise make it
@@ -64,7 +64,7 @@ export default class MemberCreateEvent extends BaseEvent {
                         message.channel.send(
                             `Aww Bump didn't go through... try again at <t:${moment(Date.now())
                                 .add(duration, "minutes")
-                                .unix()}:F>`,
+                                .unix()}:t>`,
                         );
                     }
                 }

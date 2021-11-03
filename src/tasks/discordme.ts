@@ -26,9 +26,9 @@ export async function task(client: FuzzyClient, record: Schedule) {
         .setAuthor(guild?.name!, guild?.iconURL({ dynamic: true })!)
         .setTitle("Bump Reminder!")
         .setColor(client.config.color as ColorResolvable)
-        .setURL("https://disboard.org/dashboard")
+        .setURL("https://discord.me/dashboard")
         .setDescription(
-            "Bump this server by doing [Going to https://disboard.org/dashboard](https://disboard.org/dashboard) and clicking on the bump button as soon as it hits 00:00:02.",
+            "Bump this server by doing [Going to https://discord.me/dashboard](https://disboard.org/dashboard) and clicking on the bump button as soon as it hits 00:00:02.",
         )
         .setFooter("Press the supress button to supress the bump reminder");
     const m = await staffChat.send({
@@ -43,7 +43,7 @@ export async function task(client: FuzzyClient, record: Schedule) {
         })
         .catch((e) => client._logger.error(e));
     if (buttonPush) {
-        m.edit(`Bump Supressed. Thanks ${buttonPush.user}!`);
+        m.edit({ content: `Bump Supressed. Thanks ${buttonPush.user}!`, components: [], embeds: [] });
     }
 
     return;
