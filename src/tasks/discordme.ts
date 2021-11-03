@@ -28,7 +28,7 @@ export async function task(client: FuzzyClient, record: Schedule) {
         .setColor(client.config.color as ColorResolvable)
         .setURL("https://discord.me/dashboard")
         .setDescription(
-            "Bump this server by doing [Going to https://discord.me/dashboard](https://disboard.org/dashboard) and clicking on the bump button as soon as it hits 00:00:02.",
+            "Bump this server by doing [Going to https://discord.me/dashboard](https://discord.me/dashboard) and clicking on the bump button as soon as it hits 00:00:02.",
         )
         .setFooter("Press the supress button to supress the bump reminder");
     const m = await staffChat.send({
