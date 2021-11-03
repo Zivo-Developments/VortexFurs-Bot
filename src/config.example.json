@@ -4,6 +4,7 @@
     "ownerID": "",
     "ghLink": "",
     "devLogsID": "",
-    "bumpReminderRoleID": ""
-
+    "bumpReminderRoleID": "",
+    "discordMeChannel": "",
+    "discordMeVoteRoleID": ""
 }

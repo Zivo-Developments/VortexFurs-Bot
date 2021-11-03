@@ -139,7 +139,7 @@ export const api = (client: FuzzyClient) => {
     });
 
     app.listen(3621, () => {
-        console.log("API Listening on Port 3621");
+        client._logger.info("API Listening on Port 3621");
     });
 };
 

@@ -114,11 +114,25 @@ export default class FuzzyClient extends Client {
             { uid: "GLOBAL-MIN" },
             {
                 uid: "GLOBAL-MIN",
-                task: "GLOBAL-MIN", 
+                task: "GLOBAL-MIN",
                 catchUp: true,
                 data: {},
                 nextRun: moment().add(1, "minute").toISOString(true),
                 cron: "0 * * * * *",
+            },
+        );
+        await this.scheduleRepo.findOrCreate(
+            {
+                uid: "DISCORDME",
+            },
+            {
+                uid: "DISCORDME",
+                task: "discordme",
+                catchUp: true,
+                data: {
+                    guildID: this.config.guildID
+                },
+                cron: "0 55 5,11,17,23 * * *",
             },
         );
         const records = await this.scheduleRepo.getAll();
@@ -126,9 +140,9 @@ export default class FuzzyClient extends Client {
             await this.scheduleManager
                 .addSchedule(record)
                 .then(() => {
-                    console.debug("Loaded Schedule: " + record.uid);
+                    this._logger.debug("Loaded Schedule: " + record.uid);
                 })
-                .catch((e) => console.error("Problem Loading Schedule: " + record.uid + "Error:\n" + e));
+                .catch((e) => this._logger.error("Problem Loading Schedule: " + record.uid + "Error:\n" + e));
         });
     }
 }

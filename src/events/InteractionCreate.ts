@@ -85,7 +85,7 @@ export default class InteractionCreateEvent extends BaseEvent {
         }
 
         if (interaction.isButton()) {
-            if (interaction.customId === "continue") return;
+            if (interaction.customId === "continue" || interaction.customId === "supress") return;
             const filter: (m: MessageComponentInteraction) => boolean = (m) => {
                 m.deferUpdate();
                 return m.user.id === interaction.user.id;
