@@ -19,6 +19,6 @@ export async function task(client: FuzzyClient, record: Schedule) {
             "Bump this server by doing `!d bump` here. Doing this will boost our server to the top of the page making it visible for newcomers to join, When you can please bump the server!",
         )
         .setFooter("Thanks ~ Frenzy Furs Staff Team");
-    disboardChannel.send({ embeds: [embed], content: `` });
+    disboardChannel.send({ embeds: [embed], content: `<@&${client.config.bumpReminderRoleID}>` });
     return;
 }
