@@ -491,7 +491,7 @@ export default class InteractionCreateEvent extends BaseEvent {
                                         loggingChannel.send({
                                             embeds: [
                                                 pendingVerificationMsg?.embeds[0]
-                                                    .addField(`STATUS`, `DENIED/KICKED BY ${interaction.member}`)
+                                                    .addField(`STATUS`, `DENIED BY ${interaction.member}`)
                                                     .setDescription(`Deny Reason: ${denyReason.content}`)
                                                     .setColor("RED")!,
                                             ],
