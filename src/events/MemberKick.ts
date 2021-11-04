@@ -18,19 +18,18 @@ export default class MemberKickEvent extends BaseEvent {
                     limit: 5,
                     type: "MEMBER_KICK",
                 });
-                const auditLog = fetchedLogs.entries.filter(entry => entry.action === 'MEMBER_KICK').find((entry: any) => entry.target.id === member.id);
-                const kickChannel = await channelResolver(client, guildData.kickLogChannelID);
-
-                if (kickChannel && kickChannel.isText() && auditLog?.action === 'MEMBER_KICK') {
+                const auditLog = fetchedLogs.entries.find((entry: any) => entry.target.id === member.user.id);
+                const kickChannel = await channelResolver(client, guildData?.kickLogChannelID!);
+                if (kickChannel && kickChannel.isText()) {
                     const embed = new MessageEmbed()
                         .setAuthor(
                             `${member.user.tag} (${member.user.id})`,
                             member.user.displayAvatarURL({ dynamic: true }),
                         )
-                        .setColor("RED")
+                        .setColor("BLUE")
                         .setTitle("A Member has been kicked from the Guild!")
                         .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
-                        .addField("Kick Reason", auditLog?.reason ? auditLog.reason : "None Specified")
+                        .addField("Kick Reason", auditLog!.reason ? auditLog!.reason : "None Specified")
                         .addField("Issuer", `${auditLog?.executor?.tag}`)
                         .setTimestamp()
                         .setFooter(`User ID: ${member.user.id}`);

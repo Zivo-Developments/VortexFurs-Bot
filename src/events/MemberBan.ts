@@ -12,31 +12,33 @@ export default class MemberBanEvent extends BaseEvent {
     }
     async run(client: FuzzyClient, member: GuildBan) {
         const guildData = await client.database.getCustomRepository(GuildRepo).findOne({ guildID: member.guild.id });
-        if (guildData?.banLogChannelID) {
-            setTimeout(async () => {
-                const fetchedLogs = await member.guild.fetchAuditLogs({
-                    limit: 5,
-                    type: "MEMBER_BAN_ADD",
-                });
-                const auditLog = fetchedLogs.entries.find((entry: any) => entry.target.id === member.user.id);
-                const banChannel = await channelResolver(client, guildData.banLogChannelID);
-
-                if (banChannel && banChannel.isText()) {
-                    const embed = new MessageEmbed()
-                        .setAuthor(
-                            `${member.user.tag} (${member.user.id})`,
-                            member.user.displayAvatarURL({ dynamic: true }),
-                        )
-                        .setColor("RED")
-                        .setTitle("A Member has been banned from the Guild!")
-                        .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
-                        .addField("Ban Reason", member.reason ? member.reason : "None Specified")
-                        .addField("Issuer", `${auditLog?.executor?.tag}`)
-                        .setTimestamp()
-                        .setFooter(`User ID: ${member.user.id}`);
-                    banChannel.send({ embeds: [embed] });
-                }
-            }, 1000);
+        // Upgrade partial messages to full users
+        if (member.partial) {
+            await member.fetch();
         }
+
+        setTimeout(async () => {
+            const fetchedLogs = await member.guild.fetchAuditLogs({
+                limit: 5,
+                type: "MEMBER_BAN_ADD",
+            });
+            const auditLog = fetchedLogs.entries.find((entry: any) => entry.target.id === member.user.id);
+            const banChannel = await channelResolver(client, guildData?.banLogChannelID!);
+            if (banChannel && banChannel.isText()) {
+                const embed = new MessageEmbed()
+                    .setAuthor(
+                        `${member.user.tag} (${member.user.id})`,
+                        member.user.displayAvatarURL({ dynamic: true }),
+                    )
+                    .setColor("RED")
+                    .setTitle("A Member has been banned from the Guild!")
+                    .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
+                    .addField("Ban Reason", auditLog!.reason ? auditLog!.reason : "None Specified")
+                    .addField("Issuer", `${auditLog?.executor?.tag}`)
+                    .setTimestamp()
+                    .setFooter(`User ID: ${member.user.id}`);
+                banChannel.send({ embeds: [embed] });
+            }
+        }, 1000);
     }
 }
