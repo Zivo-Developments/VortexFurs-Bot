@@ -88,8 +88,8 @@ export const api = (client: FuzzyClient) => {
                             }
                         });
                     } else {
-                        // @ts-expect-error
-                        const role = await roles.roles.find((role) => role.roleUID === roleUID);
+                        const roles = await roleRepo.findOne({ guildID: client.config.guildID, uid: uid });
+                        const role = roles!.roles.find((role) => results[uid] === role.roleUID);
                         if (role) {
                             member?.roles.add(role?.roleID!).then(() => {
                                 console.log(`Added ${role!.roleName} (${role!.roleID}) to ${member.user.username}`);
@@ -123,17 +123,29 @@ export const api = (client: FuzzyClient) => {
         const member = guild?.members.cache.get(userID);
         const profile = await memberRepo.findOne({ guildID: client.config.guildID, userID: userID });
         if (!member) return res.status(418).json({ error: "Member is not in the server", type: "NOTINGUILD" });
-        console.log(profile);
-        console.log(profile?.created);
         if (!profile || !profile.created)
             return res.status(418).json({ error: "User doesn't have profile", type: "NOPROFILE" });
         return res.status(200).json({
             profileData: {
                 bio: profile.bio,
                 xp: profile.xp,
-                roles: member?.roles.cache.filter(r => r.permissions.bitfield === 0n).map((r) => r.name),
+                roles: member?.roles.cache
+                    .filter((r) => r.permissions.bitfield === 0n)
+                    .map((r) => r.name)
+                    .sort((a, b) => {
+                        if (a.length < b.length) return 1;
+                        return -1;
+                    }),
                 color: member.displayHexColor,
                 tokens: profile.tokens,
+                pronouns: member.roles.cache
+                    .map((role) => {
+                        return role.name
+                            .replace("/", " ")
+                            .replace(/[^a-z0-9\s]/gi, "")
+                            .replace(" ", "-");
+                    })
+                    .find((r) => r === "He-Him" || r === "She-Her" || r === "They-Them"),
                 // TODO: ACHIEVEMENTS & BADGES
             },
         });
