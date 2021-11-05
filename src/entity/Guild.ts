@@ -55,4 +55,15 @@ export class Guild {
     eventLogChannel: string;
     @Column({ default: null })
     disboardChannel: string;
+    @Column({
+        type: "jsonb",
+        array: false,
+        default: () => "'[]'",
+        nullable: false,
+    })
+    messageCounter: number;
+    messageHistory: Array<{
+        day: string;
+        amount: number;
+    }>;
 }

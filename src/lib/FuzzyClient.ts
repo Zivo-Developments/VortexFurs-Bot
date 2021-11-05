@@ -1,13 +1,4 @@
-import {
-    ApplicationCommandData,
-    ApplicationCommandOptionData,
-    ChatInputApplicationCommandData,
-    Client,
-    ClientOptions,
-    Collection,
-    ColorResolvable,
-    GuildApplicationCommandPermissionData,
-} from "discord.js";
+import { ApplicationCommandData, ApplicationCommandOptionData, Client, ClientOptions, Collection } from "discord.js";
 import fs from "fs";
 import { Connection, createConnection } from "typeorm";
 import Yiffy from "yiffy";
@@ -17,9 +8,9 @@ import ScheduleManager from "../utils/SchedulingManager";
 import Utils from "../utils/Utils";
 import * as config from "../config.json";
 import Logger from "../utils/Logger";
-import { GuildRepo } from "../repositories";
-import { guildResolver } from "../utils";
 import moment from "moment";
+import { api } from "../api";
+import * as Sentry from "@sentry/node";
 
 export default class FuzzyClient extends Client {
     _logger: Logger;
@@ -108,6 +99,12 @@ export default class FuzzyClient extends Client {
         });
     }
 
+    public async initalizeSentry() {
+        Sentry.init({
+            dsn: process.env.SENTRY_DSN,
+        });
+    }
+
     public async loadSchedules() {
         this._logger.debug("Setting Up Schedules");
         await this.scheduleRepo.findOrCreate(
@@ -130,7 +127,7 @@ export default class FuzzyClient extends Client {
                 task: "discordme",
                 catchUp: true,
                 data: {
-                    guildID: this.config.guildID
+                    guildID: this.config.guildID,
                 },
                 cron: "0 59 5,11,17,23 * * *",
             },
@@ -144,5 +141,15 @@ export default class FuzzyClient extends Client {
                 })
                 .catch((e) => this._logger.error("Problem Loading Schedule: " + record.uid + "Error:\n" + e));
         });
+    }
+
+    public async login(token: string | undefined) {
+        await this.loadDatabase();
+        await this.loadCommands();
+        await this.initalizeSentry();
+        await this.loadSchedules();
+        await this.loadEvents();
+        api(this);
+        return super.login(token);
     }
 }

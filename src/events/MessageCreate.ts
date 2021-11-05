@@ -69,6 +69,7 @@ export default class MemberCreateEvent extends BaseEvent {
                     }
                 }
             }
+            return;
         }
         if (message.author.bot || client.user!.id === message.author.id) return;
         // Check if it was a dm, if so check if they have a verification question open
@@ -96,6 +97,7 @@ export default class MemberCreateEvent extends BaseEvent {
                         .then(() => message.react("✅"));
                 }
             }
+            return;
         } else {
             const verify = await verifyRepo.findOne({ questionChannelID: message.channel.id, questioning: true });
             if (verify) {
@@ -401,6 +403,8 @@ export default class MemberCreateEvent extends BaseEvent {
                     }
                 }
             }
+            const guild = await guildRepo.findOne({ guildID: message.guild!.id });
+            await guildRepo.update({ guildID: message.guild!.id }, { messageCounter: guild?.messageCounter! + 1 });
         }
     }
 }

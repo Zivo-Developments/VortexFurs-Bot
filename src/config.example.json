@@ -6,5 +6,8 @@
     "devLogsID": "",
     "bumpReminderRoleID": "",
     "discordMeChannel": "",
-    "discordMeVoteRoleID": ""
+    "discordMeVoteRoleID": "",
+    "statsMessage": "",
+    "statsChannel": "",
+    "debugMode": true
 }

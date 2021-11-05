@@ -1,6 +1,7 @@
 import moment from "moment";
 import winston from "winston";
 import FuzzyClient from "../lib/FuzzyClient";
+import * as Sentry from "@sentry/node";
 
 export default class Logger {
     private logger: winston.Logger;
@@ -29,6 +30,8 @@ export default class Logger {
 
     public error(message: string, ...args: any[]): void {
         this.logger.error(message, ...args);
+        Sentry.captureException(message);
+
     }
     public warn(message: string, ...args: any[]): void {
         this.logger.warn(message, ...args);
