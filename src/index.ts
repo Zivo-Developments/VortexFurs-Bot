@@ -1,7 +1,5 @@
-import { TextChannel } from "discord.js";
 import * as dotenv from "dotenv";
 import FuzzyClient from "./lib/FuzzyClient";
-import { channelResolver } from "./utils/resolvers";
 import * as Sentry from "@sentry/node";
 dotenv.config();
 

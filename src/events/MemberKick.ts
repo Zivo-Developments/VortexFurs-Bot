@@ -20,7 +20,7 @@ export default class MemberKickEvent extends BaseEvent {
                 });
                 const auditLog = fetchedLogs.entries.find((entry: any) => entry.target.id === member.user.id);
                 const kickChannel = await channelResolver(client, guildData?.kickLogChannelID!);
-                if (kickChannel && kickChannel.isText()) {
+                if (kickChannel && kickChannel.isText() && auditLog) {
                     const embed = new MessageEmbed()
                         .setAuthor(
                             `${member.user.tag} (${member.user.id})`,
