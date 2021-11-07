@@ -6,8 +6,8 @@ dist
 logs
 
 # Configs
-.env
-config.json
+config/*
+!config/default.example.json
 
 # yarn
 .yarn/*

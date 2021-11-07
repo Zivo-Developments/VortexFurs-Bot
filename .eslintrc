@@ -1,0 +1,119 @@
+{
+	"root": true,
+	"env": {
+		"es2021": true,
+		"node": true,
+		"commonjs": true
+	},
+	"extends": [
+		"eslint:recommended",
+		"plugin:@typescript-eslint/eslint-recommended",
+		"plugin:@typescript-eslint/recommended"
+	],
+	"parser": "@typescript-eslint/parser",
+	"parserOptions": {
+		"ecmaVersion": 2021,
+		"sourceType": "module"
+	},
+	"plugins": [
+		"@typescript-eslint",
+	],
+	"rules": {
+		// Base Eslint Rules
+		"indent": [
+			"error",
+			"tab",
+			{
+				"SwitchCase": 1,
+				"CallExpression": {
+					"arguments": 1
+				}
+			}
+		],
+		"linebreak-style": [
+			"error",
+			"unix"
+		],
+		"quotes": [
+			"error",
+			"single"
+		],
+		"semi": [
+			"error",
+			"always"
+		],
+		"eol-last": [
+			"error",
+			"always"
+		],
+		"object-curly-spacing": [
+			"error",
+			"always"
+		],
+		"default-case": "error",
+		"comma-dangle": [
+			"error",
+			"always-multiline"
+		],
+		"no-case-declarations": "off",
+		"camelcase": "off",
+		"keyword-spacing": "error",
+		"spaced-comment": [
+			"error",
+			"always"
+		],
+		"no-var": "error",
+		"eqeqeq": "error",
+		"no-eq-null": "error",
+		"arrow-parens": [
+			"error",
+			"always"
+		],
+		// TypeScript Rules
+		"@typescript-eslint/naming-convention": [
+			"error",
+			{
+				"selector": "class",
+				"format": [
+					"PascalCase"
+				]
+			},
+			{
+				"selector": "classProperty",
+				"modifiers": [
+					"private"
+				],
+				"format": [
+					"camelCase"
+				],
+				"leadingUnderscore": "require"
+			},
+			{
+				"selector": "interface",
+				"format": null,
+				"custom": {
+					"regex": "^I",
+					"match": true
+				}
+			},
+			{
+				"selector": "enum",
+				"format": null,
+				"custom": {
+					"regex": "^E",
+					"match": true
+				}
+			}
+		],
+		"@typescript-eslint/no-non-null-assertion": "off",
+		"@typescript-eslint/explicit-member-accessibility": [
+			"error",
+			{
+				"accessibility": "explicit"
+			}
+		],
+		"@typescript-eslint/explicit-function-return-type": "error",
+	},
+	"reportUnusedDisableDirectives": true
+}
+

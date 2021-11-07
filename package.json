@@ -9,15 +9,17 @@
 	"private": true,
 	"scripts": {
 		"compile": "tsc",
-		"lint": "eslint --format=pretty --save src/**/*.ts",
+		"lint": "eslint --format=pretty src/**/*.ts",
 		"postinstall": "husky install",
 		"run:dev": "NODE_CONFIG_ENV=dev node dist/index.js",
 		"run:prod": "NODE_CONFIG_ENV=production node dist/index.js"
 	},
 	"dependencies": {
-		"@neonjs/framework": "^1.1.1"
+		"@neonjs/framework": "^1.1.1",
+		"config": "^3.3.6"
 	},
 	"devDependencies": {
+		"@types/config": "^0.0.40",
 		"@typescript-eslint/eslint-plugin": "^5.3.0",
 		"@typescript-eslint/parser": "^5.3.0",
 		"@typescript-eslint/typescript-estree": "^5.3.0",
