@@ -1,12 +1,35 @@
 {
-    "name": "frenzy-furs",
-    "version": "0.1.0",
-    "description": "A Discord Bot for the Fuzzy Furs Discord Server!",
-    "main": "dist/index.js",
-    "repository": "git@github.com:Fuzzy-Furs/Bot.git",
-    "author": "Jason Diaz Jimenez <vulpothedev@gmail.com> (https://vulpo.xyz)",
-    "license": "GNU GPLv3",
-    "private": true,
-    "scripts": {},
-    "packageManager": "yarn@3.1.0"
+	"name": "frenzy-furs",
+	"version": "0.1.0",
+	"description": "A Discord Bot for the Fuzzy Furs Discord Server!",
+	"main": "dist/index.js",
+	"repository": "git@github.com:Fuzzy-Furs/Bot.git",
+	"author": "Jason Diaz Jimenez <vulpothedev@gmail.com> (https://vulpo.xyz)",
+	"license": "GNU GPLv3",
+	"private": true,
+	"scripts": {
+		"compile": "tsc",
+		"lint": "eslint --format=pretty --save src/**/*.ts",
+		"postinstall": "husky install",
+		"run:dev": "NODE_CONFIG_ENV=dev node dist/index.js",
+		"run:prod": "NODE_CONFIG_ENV=production node dist/index.js"
+	},
+	"dependencies": {
+		"@neonjs/framework": "^1.1.1"
+	},
+	"devDependencies": {
+		"@typescript-eslint/eslint-plugin": "^5.3.0",
+		"@typescript-eslint/parser": "^5.3.0",
+		"@typescript-eslint/typescript-estree": "^5.3.0",
+		"eslint": "^8.2.0",
+		"eslint-formatter-pretty": "^4.1.0",
+		"husky": "^7.0.4",
+		"lint-staged": "^11.2.6",
+		"typescript": "^4.4.4"
+	},
+	"lint-staged": {
+		"src/**/*": [
+			"yarn lint"
+		]
+	}
 }
