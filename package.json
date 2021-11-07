@@ -7,6 +7,6 @@
     "author": "Jason Diaz Jimenez <vulpothedev@gmail.com> (https://vulpo.xyz)",
     "license": "GNU GPLv3",
     "private": true,
-    "dependencies": {},
-    "scripts": {}
+    "scripts": {},
+    "packageManager": "yarn@3.1.0"
 }
