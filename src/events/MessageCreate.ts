@@ -6,6 +6,8 @@ import BaseEvent from "../structures/BaseEvent";
 import { channelResolver, messageResolver } from "../utils/resolvers";
 import { VerificationRepo } from "../repositories/VerificationRepo";
 import Verification from "../utils/Verification";
+import { getLevelFromXP, getLevelingFromMsg } from "../utils/Leveling";
+import { MemberRepo } from "../repositories";
 
 export default class MemberCreateEvent extends BaseEvent {
     constructor(client: FuzzyClient) {
@@ -405,6 +407,32 @@ export default class MemberCreateEvent extends BaseEvent {
             }
             const guild = await guildRepo.findOne({ guildID: message.guild!.id });
             await guildRepo.update({ guildID: message.guild!.id }, { messageCounter: guild?.messageCounter! + 1 });
+            if (!client.xpCooldown.includes(message.author.id)) {
+                const xp = getLevelingFromMsg(message);
+                const profile = await client.database
+                    .getCustomRepository(MemberRepo)
+                    .findOne({ guildID: message.guild!.id, userID: message.author.id });
+                if (!profile) return;
+                const earningXP = profile.xp + xp;
+                const oldLevel = getLevelFromXP(profile.xp);
+                const newLevel = getLevelFromXP(earningXP);
+                await client.database
+                    .getCustomRepository(MemberRepo)
+                    .update({ userID: message.author.id, guildID: message.guild!.id }, { xp: earningXP });
+                if (newLevel > oldLevel) {
+                    const embed = new MessageEmbed()
+                        .setAuthor(message.author.tag, message.author.displayAvatarURL({ dynamic: true }))
+                        .setTitle("Level Up!")
+                        .setDescription(`Congrats, ${message.author.username}! You're now level **${newLevel}**`)
+                        .setThumbnail(message.author.displayAvatarURL({ dynamic: true }))
+                        .setFooter(`User ID: ${message.author.id}`);
+                    message.channel.send({ embeds: [embed] });
+                }
+                this.client.xpCooldown.push(message.author.id);
+                setInterval(() =>
+                    this.client.xpCooldown.splice(this.client.xpCooldown.indexOf(message.author.id), 60000 * 5),
+                );
+            }
         }
     }
 }
