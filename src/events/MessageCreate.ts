@@ -1,4 +1,4 @@
-import { GuildMember, Message, MessageAttachment, MessageEmbed, TextChannel } from "discord.js";
+import { ColorResolvable, GuildMember, Message, MessageAttachment, MessageEmbed, TextChannel } from "discord.js";
 import moment from "moment";
 import FuzzyClient from "../lib/FuzzyClient";
 import { GuildRepo } from "../repositories/GuildRepository";
@@ -447,6 +447,7 @@ export default class MemberCreateEvent extends BaseEvent {
                         .setTitle("Level Up!")
                         .setDescription(`Congrats, ${message.author.username}! You're now level **${newLevel}**`)
                         .setTimestamp()
+                        .setColor(client.config.color as ColorResolvable)
                         .setThumbnail(message.author.displayAvatarURL({ dynamic: true }))
                         .setFooter(`User ID: ${message.author.id}`);
                     if (rewarded) {
