@@ -6,7 +6,7 @@ import BaseEvent from "../structures/BaseEvent";
 import { channelResolver, messageResolver } from "../utils/resolvers";
 import { VerificationRepo } from "../repositories/VerificationRepo";
 import Verification from "../utils/Verification";
-import { getLevelFromXP, getLevelingFromMsg } from "../utils/Leveling";
+import { config, getLevelFromXP, getLevelingFromMsg } from "../utils/Leveling";
 import { MemberRepo } from "../repositories";
 
 export default class MemberCreateEvent extends BaseEvent {
@@ -420,12 +420,45 @@ export default class MemberCreateEvent extends BaseEvent {
                     .getCustomRepository(MemberRepo)
                     .update({ userID: message.author.id, guildID: message.guild!.id }, { xp: earningXP });
                 if (newLevel > oldLevel) {
+                    let rewarded = false;
+                    let reward;
+                    if (newLevel % 5 === 0) {
+                        reward = config.levelRoles[newLevel];
+                        if (reward) {
+                            if (reward.add) {
+                                reward.add.forEach((roleID) => {
+                                    message.member?.roles
+                                        .add(message.guild?.roles.cache.get(roleID)!)
+                                        .catch((e) => console.error(e));
+                                });
+                            }
+                            if (reward.remove) {
+                                reward.remove.forEach((roleID) => {
+                                    message.member?.roles
+                                        .remove(message.guild?.roles.cache.get(roleID)!)
+                                        .catch((e) => console.error(e));
+                                });
+                            }
+                            rewarded = true;
+                        }
+                    }
                     const embed = new MessageEmbed()
                         .setAuthor(message.author.tag, message.author.displayAvatarURL({ dynamic: true }))
                         .setTitle("Level Up!")
                         .setDescription(`Congrats, ${message.author.username}! You're now level **${newLevel}**`)
+                        .setTimestamp()
                         .setThumbnail(message.author.displayAvatarURL({ dynamic: true }))
                         .setFooter(`User ID: ${message.author.id}`);
+                    if (rewarded) {
+                        embed.addField(
+                            "Added Roles",
+                            reward?.add.map((r) => message.guild?.roles.cache.get(r)!.name).join(", ")!,
+                        );
+                        embed.addField(
+                            "Removed Roles",
+                            reward?.remove.map((r) => message.guild?.roles.cache.get(r)!.name).join(", ")!,
+                        );
+                    }
                     message.channel.send({ embeds: [embed] });
                 }
                 this.client.xpCooldown.push(message.author.id);
