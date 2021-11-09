@@ -39,7 +39,7 @@ export async function task(client: FuzzyClient, record: Schedule) {
     const buttonPush = await m!
         .awaitMessageComponent({
             filter,
-            time: 60000 * 60,
+            time: 60000 * 60 * 24,
         })
         .catch((e) => client._logger.error(e));
     if (buttonPush) {
