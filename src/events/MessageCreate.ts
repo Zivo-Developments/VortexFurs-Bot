@@ -406,7 +406,8 @@ export default class MemberCreateEvent extends BaseEvent {
                 }
             }
             const guild = await guildRepo.findOne({ guildID: message.guild!.id });
-            await guildRepo.update({ guildID: message.guild!.id }, { messageCounter: guild?.messageCounter! + 1 });
+            const newCount = guild?.messageCounter! + 1
+            await guildRepo.update({ guildID: message.guild!.id }, { messageCounter: newCount });
             if (!client.xpCooldown.has(message.author.id)) {
                 client.xpCooldown.add(message.author.id);
                 setTimeout(() => client.xpCooldown.delete(message.author.id), 60000 * 5);

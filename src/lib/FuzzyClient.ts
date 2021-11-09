@@ -121,6 +121,17 @@ export default class FuzzyClient extends Client {
             },
         );
         await this.scheduleRepo.findOrCreate(
+            { uid: "GLOBAL-DAILY" },
+            {
+                uid: "GLOBAL-DAILY",
+                task: "GLOBAL-DAILY",
+                catchUp: true,
+                data: {},
+                nextRun: moment().add(1, "day").toISOString(true),
+                cron: "0 * * * * *",
+            },
+        );
+        await this.scheduleRepo.findOrCreate(
             {
                 uid: "DISCORDME",
             },
