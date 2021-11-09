@@ -407,7 +407,9 @@ export default class MemberCreateEvent extends BaseEvent {
             }
             const guild = await guildRepo.findOne({ guildID: message.guild!.id });
             await guildRepo.update({ guildID: message.guild!.id }, { messageCounter: guild?.messageCounter! + 1 });
-            if (!client.xpCooldown.includes(message.author.id)) {
+            if (!client.xpCooldown.has(message.author.id)) {
+                client.xpCooldown.add(message.author.id);
+                setTimeout(() => client.xpCooldown.delete(message.author.id), 60000 * 5);
                 const xp = getLevelingFromMsg(message);
                 const profile = await client.database
                     .getCustomRepository(MemberRepo)
@@ -462,10 +464,6 @@ export default class MemberCreateEvent extends BaseEvent {
                     }
                     message.channel.send({ embeds: [embed] });
                 }
-                this.client.xpCooldown.push(message.author.id);
-                setInterval(() =>
-                    this.client.xpCooldown.splice(this.client.xpCooldown.indexOf(message.author.id), 60000 * 5),
-                );
             }
         }
     }

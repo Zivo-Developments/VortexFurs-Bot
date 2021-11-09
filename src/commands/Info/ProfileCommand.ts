@@ -3,6 +3,7 @@ import { Member } from "../../entity/Member";
 import FuzzyClient from "../../lib/FuzzyClient";
 import { MemberRepo } from "../../repositories";
 import BaseSlashCommand from "../../structures/BaseCommand";
+import { getLevelFromXP, getXPFromLevel } from "../../utils/Leveling";
 
 export default class PingCommand extends BaseSlashCommand {
     constructor(client: FuzzyClient) {
@@ -33,6 +34,8 @@ export default class PingCommand extends BaseSlashCommand {
                     .map((r) => r)
                     .join(" "),
             )
+            .addField("Level", `Level ${getLevelFromXP(profile.xp)}`)
+            .addField(`Next Level`, `${profile.xp}/${getXPFromLevel(getLevelFromXP(profile.xp) + 1)}`)
             .addField("More Stuff?", "Coming Soon")
             .setColor("#ff1493"!)
             .setURL("https://www.hozol.xyz/profile/")
