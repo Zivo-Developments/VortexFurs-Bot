@@ -5,6 +5,7 @@ import { ISelectMenuData, roleResolver } from "../utils";
 const app = express();
 import cors from "cors";
 import { MemberRepo } from "../repositories";
+import { getLevelFromXP, getXPFromLevel } from "../utils/Leveling";
 
 export const api = (client: FuzzyClient) => {
     app.use(express.urlencoded({ extended: true }));
@@ -128,7 +129,11 @@ export const api = (client: FuzzyClient) => {
         return res.status(200).json({
             profileData: {
                 bio: profile.bio,
-                xp: profile.xp,
+                xp: {
+                    level: getLevelFromXP(profile.xp),
+                    xp: profile.xp,
+                    nextLevelXP: getXPFromLevel(getLevelFromXP(profile.xp) + 1),
+                },
                 roles: member?.roles.cache
                     .filter((r) => r.permissions.bitfield === 0n)
                     .map((r) => r.name)
