@@ -21,6 +21,7 @@ export default class FuzzyClient extends Client {
     arrayOfSlashCommands: (BaseCommand & ApplicationCommandData)[];
     scheduleRepo: ScheduleRepo;
     scheduleManager: ScheduleManager;
+    xpCooldown: string[];
     utils: Utils;
     config: typeof config;
     database: Connection;
@@ -32,6 +33,7 @@ export default class FuzzyClient extends Client {
         this.furryAPI = new Yiffy();
         this.schedules = {};
         this.arrayOfSlashCommands = [];
+        this.xpCooldown = [];
         this.utils = new Utils();
         this.scheduleManager = new ScheduleManager(this);
         this._logger = new Logger(this);
