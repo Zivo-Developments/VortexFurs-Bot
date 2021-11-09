@@ -13,8 +13,8 @@ export async function task(client: FuzzyClient, record: Schedule) {
         const channel = guild!.channels.cache.get(client.config.statsChannel)
         if(!channel || !channel.isText()) return;
         let msg;
-        msg = channel.messages.cache.get(client.config.statsMessage);
-        if(msg) msg = channel.send("Temporary")
+        msg = await channel.messages.fetch(client.config.statsMessage);
+        if(!msg) msg = channel.send("Temporary")
         const embed = new MessageEmbed()
             .setAuthor(client.user?.username!, client.user?.displayAvatarURL())
             .addField("Message Sent today", `${guildData?.messageCounter}`)
