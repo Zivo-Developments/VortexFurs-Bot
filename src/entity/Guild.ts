@@ -62,6 +62,7 @@ export class Guild {
         nullable: false,
     })
     messageCounter: number;
+    lastStatsMsg: string;
     messageHistory: Array<{
         day: string;
         amount: number;

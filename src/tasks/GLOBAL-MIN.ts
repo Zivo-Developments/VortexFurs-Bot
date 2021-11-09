@@ -11,16 +11,16 @@ export async function task(client: FuzzyClient, record: Schedule) {
         const guild = client.guilds.cache.get(client.config.guildID);
         const guildRepo = client.database.getCustomRepository(GuildRepo);
         const guildData = await guildRepo.findOne({ guildID: client.config.guildID });
-        const channel = guild!.channels.cache.get(client.config.statsChannel) as TextChannel
-        let msg;
-        msg = await messageResolver(channel, client.config.statsMessage)
-        if(!msg) msg = channel.send("Temporary")
+        const channel = guild!.channels.cache.get(client.config.statsChannel) as TextChannel;
+        let msg = await messageResolver(channel, client.config.statsMessage);
+        if (msg.partial) msg.fetch();
+        if (!msg) return
         const embed = new MessageEmbed()
             .setAuthor(client.user?.username!, client.user?.displayAvatarURL())
             .addField("Message Sent today", `${guildData?.messageCounter}`)
             .setColor(client.config.color as ColorResolvable)
             .setFooter(`Last Updated ${moment().format("LLLL")}`);
-        await channel.send({ embeds: [embed] });
+        await msg.edit({ embeds: [embed] });
     } catch (e) {
         throw new Error(e as any);
     }
