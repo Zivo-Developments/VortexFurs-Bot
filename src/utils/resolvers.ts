@@ -59,9 +59,9 @@ export async function memberResolver(guild: Guild, mention: string): Promise<Gui
     throw new Error(`Invalid Member: ${mention}. Remember, members exist in the guild`);
 }
 
-export async function messageResolver(message: Message, snowflake: string): Promise<Message> {
+export async function messageResolver(channel: TextChannel, snowflake: string): Promise<Message> {
     const msg = snowflakeRegex.test(snowflake)
-        ? await message.channel.messages.fetch(snowflake).catch(() => null)
+        ? await channel.messages.fetch(snowflake).catch(() => null)
         : undefined;
     if (msg) return msg;
 

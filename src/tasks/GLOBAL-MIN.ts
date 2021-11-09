@@ -3,6 +3,7 @@ import moment from "moment";
 import { Schedule } from "../entity/Schedules";
 import FuzzyClient from "../lib/FuzzyClient";
 import { GuildRepo } from "../repositories";
+import { messageResolver } from "../utils";
 
 export async function task(client: FuzzyClient, record: Schedule) {
     client._logger.debug("GLOBAL Minute has been executed");
@@ -10,10 +11,9 @@ export async function task(client: FuzzyClient, record: Schedule) {
         const guild = client.guilds.cache.get(client.config.guildID);
         const guildRepo = client.database.getCustomRepository(GuildRepo);
         const guildData = await guildRepo.findOne({ guildID: client.config.guildID });
-        const channel = guild!.channels.cache.get(client.config.statsChannel)
-        if(!channel || !channel.isText()) return;
+        const channel = guild!.channels.cache.get(client.config.statsChannel) as TextChannel
         let msg;
-        msg = await channel.messages.fetch(client.config.statsMessage);
+        msg = await messageResolver(channel, client.config.statsMessage)
         if(!msg) msg = channel.send("Temporary")
         const embed = new MessageEmbed()
             .setAuthor(client.user?.username!, client.user?.displayAvatarURL())
