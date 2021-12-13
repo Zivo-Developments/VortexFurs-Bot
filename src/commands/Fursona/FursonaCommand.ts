@@ -7,7 +7,7 @@ import Fursona from "../../utils/Fursona";
 export default class FursonaCommand extends BaseCommand {
     constructor(client: FuzzyClient) {
         super(client, {
-            name: "fursona",
+            name: "group",
             botPermissions: [],
             shortDescription: "Manage your Sonas!",
             userPermissions: [],
