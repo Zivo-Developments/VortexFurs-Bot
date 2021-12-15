@@ -31,11 +31,11 @@ export async function task(client: FuzzyClient, record: Schedule) {
             "Bump this server by doing [Going to https://discord.me/dashboard](https://discord.me/dashboard) and clicking on the bump button as soon as it hits 00:00:02.",
         )
         .setFooter("Press the supress button to supress the bump reminder");
-    const m = await staffChat.send({
-        embeds: [embed],
-        content: `<@&${client.config.discordMeVoteRoleID}>`,
-        components: [supressBtn],
-    });
+    // const m = await staffChat.send({
+    //  embeds: [embed],
+    //  content: `<@&${client.config.discordMeVoteRoleID}>`,
+    //  components: [supressBtn],
+    // });
     const buttonPush = await m!
         .awaitMessageComponent({
             filter,
