@@ -1,5 +1,6 @@
 import cryptoRandomString from "crypto-random-string";
 import { CommandInteraction, MessageEmbed } from "discord.js";
+import { random } from "lodash";
 import FuzzyClient from "../../lib/FuzzyClient";
 import { BadgeRepo } from "../../repositories/BadgeRepository";
 import { PartnersRepo } from "../../repositories/PartnersRepository";
@@ -88,7 +89,7 @@ export default class BadgeCommand extends BaseCommand {
                 const invite = interaction.options.getString("invite", true);
                 const iconURL = interaction.options.getString("iconLink", true);
                 const affliates = interaction.options.getBoolean("afflilates", true);
-                const partnerID = cryptoRandomString({ length: 10 });
+                const partnerID = random(false)
                 const created = await partnerRepo.createPartnership({
                     affliates,
                     rep: rep.id,
