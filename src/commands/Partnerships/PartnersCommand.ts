@@ -28,7 +28,7 @@ export default class BadgeCommand extends BaseCommand {
                             required: true,
                         },
                         {
-                            name: "name",
+                            name: "serverName",
                             description: "Name of their server",
                             type: "STRING",
                             required: true,
