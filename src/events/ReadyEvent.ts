@@ -27,6 +27,7 @@ export default class ReadyEvent extends BaseEvent {
             const guildRepo = client.database.getCustomRepository(GuildRepo);
             const guildData = guildRepo.findOrCreate({ guildID: guild.id }, { guildID: guild.id });
             await guild!.commands.set(client.arrayOfSlashCommands).then(async (cmd) => {
+                console.log(`Adding ${cmd} to the Guild Slash Commands`)
                 client._logger.info("Setting (/) Permissions");
                 const getRoles = (cmdName: string) => {
                     const permsRequired = client.arrayOfSlashCommands.find((x) => x.name === cmdName)!.userPermissions;
@@ -69,7 +70,7 @@ export default class ReadyEvent extends BaseEvent {
                     });
                 });
                 guild?.commands.permissions.set({ fullPermissions: fullPerms });
-            });
+            })
 
             client.users.cache.get(client.config.ownerID)?.send("READY");
             client.user?.setStatus("online");
