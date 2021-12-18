@@ -6,6 +6,7 @@ const app = express();
 import cors from "cors";
 import { MemberRepo } from "../repositories";
 import { getLevelFromXP, getXPFromLevel } from "../utils/Leveling";
+import { PartnersRepo } from "../repositories/PartnersRepository";
 
 export const api = (client: FuzzyClient) => {
     app.use(express.urlencoded({ extended: true }));
@@ -19,6 +20,21 @@ export const api = (client: FuzzyClient) => {
     app.use((req, res, next) => {
         req.client = client;
         next();
+    });
+
+    app.get("/partners", async (req, res) => {
+        const partnersRepo = client.database.getCustomRepository(PartnersRepo);
+        const partners = await partnersRepo.find({});
+        const partnerList = partners.map(partner => {
+            const tag = req.client.users.cache.get(partner.rep)!.tag
+            return {
+                name: partner.serverName,
+                rep: tag,
+                summary: partner.summary,
+                invite: partner.invite,
+            }
+        })
+        res.json({ data: partnerList });
     });
 
     app.get("/forms/select", async (req, res) => {
