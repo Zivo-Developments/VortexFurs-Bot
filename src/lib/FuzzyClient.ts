@@ -70,14 +70,15 @@ export default class FuzzyClient extends Client {
                 if (file.userPermissions.length > 0 || file.ownerOnly) file.defaultPermission = false;
                 const commandOptions: ApplicationCommandOptionData[] = [];
                 file.args?.forEach((arg) => {
+                    // @ts-expect-error
                     commandOptions.push({
                         name: arg.name,
                         description: arg.description,
-                        type: arg.type,
+                        type: arg.type as any,
+                        autocomplete: false,
                         choices: arg.choices,
-                        required: arg.required,
-                        // @ts-ignore
                         options: arg.options,
+                        required: arg.required,
                     });
                 });
                 this.arrayOfSlashCommands.push({

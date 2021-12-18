@@ -1,11 +1,12 @@
 import express from "express";
 import FuzzyClient from "../lib/FuzzyClient";
 import { RolesRepo } from "../repositories/RolesRepository";
-import { ISelectMenuData, roleResolver } from "../utils";
+import { ISelectMenuData, memberResolver, roleResolver } from "../utils";
 const app = express();
 import cors from "cors";
 import { MemberRepo } from "../repositories";
 import { getLevelFromXP, getXPFromLevel } from "../utils/Leveling";
+import { PartnersRepo } from "../repositories/PartnersRepository";
 
 export const api = (client: FuzzyClient) => {
     app.use(express.urlencoded({ extended: true }));
@@ -19,6 +20,40 @@ export const api = (client: FuzzyClient) => {
     app.use((req, res, next) => {
         req.client = client;
         next();
+    });
+
+    app.get("/partners", async (req, res) => {
+        const partnersRepo = client.database.getCustomRepository(PartnersRepo);
+        const partners = await partnersRepo.find({});
+        const partnerList = partners.map((partner) => {
+            const tag = req.client.users.cache.get(partner.rep)!.tag;
+            return {
+                name: partner.serverName,
+                rep: tag,
+                summary: partner.summary,
+                invite: partner.invite,
+                iconURL: partner.iconURL,
+            };
+        });
+        res.json({ data: partnerList });
+    });
+
+    app.get("/staff", async (req, res) => {
+        const guild = req.client.guilds.cache.get(req.client.config.guildID);
+        const staff: { [x: string]: { username: string; icon: string }[] } = {};
+        for (const role in req.client.config.staffRoles) {
+            const position = role;
+            staff[position] = [];
+
+            // @ts-expect-error
+            guild!?.roles.cache.get(req.client.config.staffRoles[position])?.members.forEach(async (member) => {
+                let memberData: any = {};
+                memberData["username"] = member.user.username;
+                memberData["avatar"] = member.user.displayAvatarURL({ dynamic: true });
+                staff[role].push(memberData);
+            });
+        }
+        res.send(staff);
     });
 
     app.get("/forms/select", async (req, res) => {

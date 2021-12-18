@@ -1,4 +1,4 @@
-import { AwaitMessagesOptions, GuildMember, TextBasedChannels } from "discord.js";
+import { AwaitMessagesOptions, GuildMember, TextBasedChannel } from "discord.js";
 import hastebin from "hastebin-gen";
 
 export default class Utils {
@@ -17,7 +17,7 @@ export default class Utils {
     }
 
     public async awaitReply(
-        channel: TextBasedChannels,
+        channel: TextBasedChannel,
         content: string,
         opts: AwaitMessagesOptions = { time: 60000 * 10, max: 1 },
         remove: boolean,

@@ -57,19 +57,6 @@ export default class BadgeCommand extends BaseCommand {
                     ],
                 },
                 {
-                    name: "remove",
-                    description: "Add Badges",
-                    type: "SUB_COMMAND",
-                    options: [
-                        {
-                            name: "name",
-                            description: "Name of the badge",
-                            type: "STRING",
-                            required: true,
-                        },
-                    ],
-                },
-                {
                     name: "list",
                     description: "Add Badges",
                     type: "SUB_COMMAND",

@@ -4,7 +4,7 @@ import {
     MessageButton,
     MessageComponentInteraction,
     MessageEmbed,
-    TextBasedChannels,
+    TextBasedChannel,
     TextChannel,
 } from "discord.js";
 import moment from "moment";
@@ -544,7 +544,7 @@ export default class InteractionCreateEvent extends BaseEvent {
                                                 "Please be honest with your responses. The Bot will send the staff's question here",
                                             );
                                         const embed = new MessageEmbed(pendingVerificationMsg!.embeds[0]);
-                                        chan.send({
+                                        (chan as TextBasedChannel).send({
                                             content: `You're questioning: ${verifyingMember}\n\nHere's a couple of tips\n- In order to send a message without sending it to the user start it with \`//\`\n- \`!!accept\`, \`!!deny\`, \`!!ban\`, and \`!!kick\` should be used.\n\n${interaction.member}`,
                                             embeds: [embed],
                                         });
@@ -560,7 +560,7 @@ export default class InteractionCreateEvent extends BaseEvent {
                                     `Please refer to ${interaction.guild.channels.cache.get(verify.questionChannelID)}`,
                                 );
                                 (
-                                    interaction.guild.channels.cache.get(verify.questionChannelID) as TextBasedChannels
+                                    interaction.guild.channels.cache.get(verify.questionChannelID) as TextBasedChannel
                                 ).send(
                                     `${interaction.member} pssst this questioning channel is still open! There's no need to make more!`,
                                 );

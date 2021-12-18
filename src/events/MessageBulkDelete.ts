@@ -37,7 +37,7 @@ export default class MessageDeleteBulk extends BaseEvent {
         const guildData = await client.database.getCustomRepository(GuildRepo).findOne({ guildID: guild.id });
         const messageLogsChannel = await channelResolver(client, guildData?.messageLogChannelID!);
         setTimeout(async () => {
-            const fetchedLogs: GuildAuditLogs = await guild?.fetchAuditLogs({
+            const fetchedLogs: GuildAuditLogs<"MESSAGE_BULK_DELETE"> = await guild?.fetchAuditLogs({
                 limit: 1,
                 type: "MESSAGE_BULK_DELETE",
             });

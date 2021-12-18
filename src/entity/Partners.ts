@@ -13,6 +13,8 @@ export class Partners {
     @Column({ default: null })
     summary: string;
     @Column({ default: null })
+    iconURL: string;
+    @Column({ default: null })
     affliates: boolean;
     @Column({ default: null })
     invite: string;
