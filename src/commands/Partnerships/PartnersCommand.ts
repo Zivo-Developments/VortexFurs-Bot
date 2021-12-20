@@ -28,13 +28,13 @@ export default class BadgeCommand extends BaseCommand {
                             required: true,
                         },
                         {
-                            name: "serverName",
+                            name: "name",
                             description: "Name of their server",
                             type: "STRING",
                             required: true,
                         },
                         {
-                            name: "iconURL",
+                            name: "link",
                             description: "Link of the ICON",
                             type: "STRING",
                             required: true,
@@ -61,11 +61,11 @@ export default class BadgeCommand extends BaseCommand {
                 },
                 {
                     name: "remove",
-                    description: "Remove Server",
+                    description: "Remove partnered server",
                     type: "SUB_COMMAND",
                     options: [
                         {
-                            name: "partnerID",
+                            name: "partnerid",
                             description: "ID of the Partnership",
                             type: "STRING",
                             required: true,
