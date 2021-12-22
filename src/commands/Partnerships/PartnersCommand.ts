@@ -34,7 +34,7 @@ export default class BadgeCommand extends BaseCommand {
                             required: true,
                         },
                         {
-                            name: "link",
+                            name: "iconLink",
                             description: "Link of the ICON",
                             type: "STRING",
                             required: true,
