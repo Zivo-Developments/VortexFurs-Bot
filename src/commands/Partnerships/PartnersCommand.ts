@@ -34,7 +34,7 @@ export default class BadgeCommand extends BaseCommand {
                             required: true,
                         },
                         {
-                            name: "iconLink",
+                            name: "iconlink",
                             description: "Link of the ICON",
                             type: "STRING",
                             required: true,
@@ -88,12 +88,13 @@ export default class BadgeCommand extends BaseCommand {
                 const rep = interaction.options.getUser("rep", true);
                 const summary = interaction.options.getString("summary", true);
                 const invite = interaction.options.getString("invite", true);
-                const iconURL = interaction.options.getString("iconLink", true);
+                const iconURL = interaction.options.getString("iconlink", true);
                 const affliates = interaction.options.getBoolean("afflilates", true);
                 const partnerID = uuid()
                 const created = await partnerRepo.createPartnership({
                     affliates,
                     rep: rep.id,
+                    iconURL: iconURL,
                     serverName: name,
                     summary: summary,
                     invite,
