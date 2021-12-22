@@ -25,15 +25,16 @@ export const api = (client: FuzzyClient) => {
     app.get("/partners", async (req, res) => {
         const partnersRepo = client.database.getCustomRepository(PartnersRepo);
         const partners = await partnersRepo.find({});
-        const partnerList = partners.map(partner => {
-            const tag = req.client.users.cache.get(partner.rep)!.tag
+        const partnerList = partners.map((partner) => {
+            const tag = req.client.users.cache.get(partner.rep)!.tag;
             return {
                 name: partner.serverName,
                 rep: tag,
                 summary: partner.summary,
                 invite: partner.invite,
-            }
-        })
+                iconURL: partner.iconURL,
+            };
+        });
         res.json({ data: partnerList });
     });
 
