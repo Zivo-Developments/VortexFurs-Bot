@@ -89,7 +89,7 @@ export default class BadgeCommand extends BaseCommand {
                 const summary = interaction.options.getString("summary", true);
                 const invite = interaction.options.getString("invite", true);
                 const iconURL = interaction.options.getString("iconlink", true);
-                const affliates = interaction.options.getBoolean("afflilates", true);
+                const affliates = interaction.options.getBoolean("affliates", true);
                 const partnerID = uuid()
                 const created = await partnerRepo.createPartnership({
                     affliates,
