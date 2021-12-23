@@ -41,8 +41,10 @@ export const api = (client: FuzzyClient) => {
     app.get("/staff", async (req, res) => {
         const guild = req.client.guilds.cache.get(req.client.config.guildID);
         let staff: { name: string; icon: string; banner: string }[] = [];
-        for (let position in req.client.config.staffRoles) {
-            guild?.roles.cache.get(req.client.config.staffRoles[position])?.members.forEach(async (member) => {
+        const keys = Object.keys(req.client.config.staffRoles);
+        keys.forEach((key, index) => {
+            // @ts-expect-error
+            guild?.roles.cache.get(req.client.config.staffRoles[key])?.members.forEach(async (member) => {
                 await member.user.fetch(true);
                 staff.push({
                     name: member.user.username,
@@ -52,7 +54,7 @@ export const api = (client: FuzzyClient) => {
                     banner: member.user.bannerURL({ dynamic: true }) || "",
                 });
             });
-        }
+        });
         res.json({ data: staff });
     });
 
