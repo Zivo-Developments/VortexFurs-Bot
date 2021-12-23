@@ -38,6 +38,24 @@ export const api = (client: FuzzyClient) => {
         res.json({ data: partnerList });
     });
 
+    app.get("/partners", async (req, res) => {
+        const guild = req.client.guilds.cache.get(req.client.config.guildID);
+        let staff: { name: string; icon: string; banner: string }[] = [];
+        for (let position in req.client.config.staffRoles) {
+            guild?.roles.cache.get(position)?.members.forEach(async (member) => {
+                await member.user.fetch(true);
+                staff.push({
+                    name: member.user.username,
+                    icon:
+                        member.user.avatarURL({ format: "png", dynamic: true }) ||
+                        "https://pfps.gg/assets/pfps/4909-default-discord.png",
+                    banner: member.user.bannerURL({ dynamic: true }) || "",
+                });
+            });
+        }
+        res.json({ data: staff });
+    });
+
     app.get("/forms/select", async (req, res) => {
         const roleRepo = client.database.getCustomRepository(RolesRepo);
         const roles = await roleRepo.find({ guildID: client.config.guildID });
