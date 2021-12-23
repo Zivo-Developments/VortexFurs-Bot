@@ -48,7 +48,6 @@ export const api = (client: FuzzyClient) => {
             // @ts-expect-error
             guild!?.roles.cache.get(req.client.config.staffRoles[position])?.members.forEach(async (member) => {
                 let memberData: any = {};
-                await member.user.fetch(true);
                 memberData["username"] = member.user.username;
                 memberData["avatar"] = member.user.displayAvatarURL({ dynamic: true });
                 memberData["banner"] = member.user.bannerURL({ dynamic: true });
