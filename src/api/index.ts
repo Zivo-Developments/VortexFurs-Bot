@@ -42,7 +42,7 @@ export const api = (client: FuzzyClient) => {
         const guild = req.client.guilds.cache.get(req.client.config.guildID);
         let staff: { name: string; icon: string; banner: string }[] = [];
         for (let position in req.client.config.staffRoles) {
-            guild?.roles.cache.get(position)?.members.forEach(async (member) => {
+            guild?.roles.cache.get(req.client.config.staffRoles[position])?.members.forEach(async (member) => {
                 await member.user.fetch(true);
                 staff.push({
                     name: member.user.username,
