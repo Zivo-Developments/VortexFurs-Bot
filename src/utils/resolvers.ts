@@ -28,7 +28,7 @@ export async function channelResolver(client: FuzzyClient, mention: string): Pro
     const channel = channelRegex.test(mention)
         ? await client.channels.fetch(channelRegex.exec(mention)![1]).catch(() => null)
         : null;
-    if (channel) return channel;
+    if (channel) return channel as TextChannel;
     return null;
 }
 

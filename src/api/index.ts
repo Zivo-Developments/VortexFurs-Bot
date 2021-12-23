@@ -40,21 +40,23 @@ export const api = (client: FuzzyClient) => {
 
     app.get("/staff", async (req, res) => {
         const guild = req.client.guilds.cache.get(req.client.config.guildID);
-        let staff: { name: string; icon: string; banner: string }[] = [];
-        const keys = Object.keys(req.client.config.staffRoles);
-        keys.forEach((key, index) => {
+        const staff: { [x: string]: { username: string; banner: string; icon: string }[] } = {};
+        for (const role in req.client.config.staffRoles) {
+            const position = role;
+            staff[position] = [];
+
             // @ts-expect-error
-            guild?.roles.cache.get(req.client.config.staffRoles[key])?.members.forEach(async (member) => {
-                await member.user.fetch(true);
-                staff.push({
-                    name: member.user.username,
-                    icon:
-                        member.user.avatarURL({ format: "png", dynamic: true }) ||
-                        "https://pfps.gg/assets/pfps/4909-default-discord.png",
-                    banner: member.user.bannerURL({ dynamic: true }) || "",
-                });
+            guild!?.roles.cache.get(req.client.config.staffRoles[position])?.members.forEach(async (member) => {
+                let memberData: any = {};
+                member.user.fetch();
+                memberData["username"] = member.user.username;
+                memberData["avatar"] = member.user.displayAvatarURL({ dynamic: true });
+                memberData["banner"] = member.user.banner
+                    ? `https://cdn.discordapp.com/banners/${member.user.id}/${member.user.banner}`
+                    : "";
+                staff[role].push(memberData);
             });
-        });
+        }
         res.json({ data: staff });
     });
 
