@@ -117,7 +117,7 @@ export default class BadgeCommand extends BaseCommand {
                 interaction.reply({ embeds: [embed] });
                 break;
             case "remove":
-                const PID = interaction.options.getString("partnerID", true);
+                const PID = interaction.options.getString("partnerid", true);
                 const success = await partnerRepo.delete({
                     partnerID: PID,
                 });
