@@ -1,4 +1,4 @@
-FROM node:17.0.1-slim
+FROM node:current-slim
 WORKDIR /app
 COPY . .
 RUN yarn install
