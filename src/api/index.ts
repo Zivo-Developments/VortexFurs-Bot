@@ -38,7 +38,7 @@ export const api = (client: FuzzyClient) => {
         res.json({ data: partnerList });
     });
 
-    app.get("/partners", async (req, res) => {
+    app.get("/staff", async (req, res) => {
         const guild = req.client.guilds.cache.get(req.client.config.guildID);
         let staff: { name: string; icon: string; banner: string }[] = [];
         for (let position in req.client.config.staffRoles) {
